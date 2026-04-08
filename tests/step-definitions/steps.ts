@@ -3,6 +3,7 @@ import { expect, $ } from '@wdio/globals'
 
 import LoginPage from '../pageobjects/login.page';
 import SecurePage from '../pageobjects/secure.page';
+import ShoppingPage from '../pageobjects/shopping.page';
 
 const pages = {
     login: LoginPage

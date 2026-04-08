@@ -26,7 +26,7 @@ export const config: WebdriverIO.Config = {
     // of the config file unless it's absolute.
     //
     specs: [
-        './tests/features/**/*.feature'
+        './tests/features/shopping.feature'
     ],
     // Patterns to exclude.
     exclude: [
@@ -55,14 +55,18 @@ export const config: WebdriverIO.Config = {
     // https://saucelabs.com/platform/platform-configurator
     //
     capabilities: [{
-        // capabilities for local Appium web tests on an Android Emulator
+
+        // capabilities for local Appium native app tests on an Android Emulator
         platformName: 'Android',
-        browserName: 'Chrome',
+
         'appium:deviceName': 'Pixel 9 API 35',
         'appium:platformVersion': '15.0',
         'appium:automationName': 'UiAutomator2',
-        'appium:chromedriverAutodownload': true,
-        'appium:chromedriverExecutable': './node_modules/chromedriver/bin/chromedriver'
+        'appium:app': './apps/General-Store.apk',
+        'appium:appPackage': 'com.androidsample.generalstore',
+        'appium:appActivity': '.SplashActivity',
+        'appium:noReset': false,
+        'appium:fullReset': true
     } as any],
 
     //
@@ -140,7 +144,7 @@ export const config: WebdriverIO.Config = {
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
         // <string[]> (file/dir) require files before executing features
-        require: ['./tests/step-definitions/steps.ts'],
+        require: ['./tests/step-definitions/*.ts'],
         // <boolean> show full backtrace for errors
         backtrace: false,
         // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)

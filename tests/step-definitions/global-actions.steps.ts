@@ -24,16 +24,6 @@ When(/^I right click on (\w+) (button|link|element)$/, async (elementName: strin
     // Implementation needed
 });
 
-When(/^I click on (\w+) (button|link|element)$/, async (elementName: string, elementType: string) => {
-    console.log(`When: Clicking on ${elementName} ${elementType}`);
-    // Implementation needed
-});
-
-When(/^I double click on (\w+) (button|link|element)$/, async (elementName: string, elementType: string) => {
-    console.log(`When: Double clicking on ${elementName} ${elementType}`);
-    // Implementation needed
-});
-
 // ===============================
 // DROPDOWN AND SELECTION ACTIONS
 // ===============================
@@ -47,11 +37,6 @@ When(/^I select (\w+) option from (\w+) dropdown$/, async (option: string, eleme
     // Implementation needed
 });
 
-When(/^I select "([^"]*)" from (\w+) dropdown$/, async (option: string, elementName: string) => {
-    console.log(`When: Selecting "${option}" from ${elementName} dropdown`);
-    // Implementation needed
-});
-
 // ===============================
 // HOVER AND FOCUS ACTIONS
 // ===============================
@@ -62,11 +47,6 @@ When(/^I hover over (\w+) (button|link|element)$/, async (elementName: string, e
 
 When(/^I focus on (\w+) (field|input|element)$/, async (elementName: string, elementType: string) => {
     console.log(`Focusing on ${elementName} ${elementType}`);
-    // Implementation needed
-});
-
-When(/^I hover over (\w+) (button|link|element)$/, async (elementName: string, elementType: string) => {
-    console.log(`When: Hovering over ${elementName} ${elementType}`);
     // Implementation needed
 });
 
@@ -100,11 +80,6 @@ When(/^I scroll (left|right|up|down) to (\w+) and click on (\w+)$/, async (direc
 
 When(/^I scroll (left|right|up|down) by (\d+) pixels$/, async (direction: string, pixels: string) => {
     console.log(`Scrolling ${direction} by ${pixels} pixels`);
-    // Implementation needed
-});
-
-When(/^I scroll to (\w+) (element|section)$/, async (elementName: string, elementType: string) => {
-    console.log(`When: Scrolling to ${elementName} ${elementType}`);
     // Implementation needed
 });
 
@@ -158,8 +133,8 @@ When(/^I zoom out on (\w+)$/, async (elementName: string) => {
 // ===============================
 // TEXT INPUT ACTIONS
 // ===============================
-When(/^I typing "([^"]*)" into "([^"]*)"$/, async (text: string, elementName: string, elementType: string) => {
-    console.log(`Typing "${text}" into ${elementName} ${elementType}`);
+When(/^I (type|enter) "([^"]*)" into (\w+) (field|input|textbox)$/, async (action: string, text: string, elementName: string, elementType: string) => {
+    console.log(`Typing/Entering "${text}" into ${elementName} ${elementType}`);
     // Implementation needed
 });
 
@@ -170,16 +145,6 @@ When(/^I clear (\w+) (field|input|textbox)$/, async (elementName: string, elemen
 
 When(/^I select all text in (\w+) (field|input|textbox)$/, async (elementName: string, elementType: string) => {
     console.log(`Selecting all text in ${elementName} ${elementType}`);
-    // Implementation needed
-});
-
-When(/^I type "([^"]*)" into (\w+) (field|input|textbox)$/, async (text: string, elementName: string, elementType: string) => {
-    console.log(`When: Typing "${text}" into ${elementName} ${elementType}`);
-    // Implementation needed
-});
-
-When(/^I clear (\w+) (field|input|textbox)$/, async (elementName: string, elementType: string) => {
-    console.log(`When: Clearing ${elementName} ${elementType}`);
     // Implementation needed
 });
 
@@ -201,15 +166,7 @@ When(/^I select (\w+) radio button$/, async (elementName: string) => {
     // Implementation needed
 });
 
-When(/^I check (\w+) checkbox$/, async (elementName: string) => {
-    console.log(`When: Checking ${elementName} checkbox`);
-    // Implementation needed
-});
 
-When(/^I uncheck (\w+) checkbox$/, async (elementName: string) => {
-    console.log(`When: Unchecking ${elementName} checkbox`);
-    // Implementation needed
-});
 
 // ===============================
 // NAVIGATION ACTIONS
@@ -254,10 +211,7 @@ When(/^I close current tab$/, async () => {
     // Implementation needed
 });
 
-When(/^I navigate to "([^"]*)"$/, async (url: string) => {
-    console.log(`When: Navigating to "${url}"`);
-    // Implementation needed
-});
+
 
 // ===============================
 // WAIT ACTIONS
@@ -292,16 +246,6 @@ When('I wait for page to load', async () => {
     // Implementation needed
 });
 
-When(/^I wait for (\w+) to be visible$/, async (elementName: string) => {
-    console.log(`When: Waiting for ${elementName} to be visible`);
-    // Implementation needed
-});
-
-When(/^I wait (\d+) seconds$/, async (seconds: string) => {
-    console.log(`When: Waiting ${seconds} seconds`);
-    // Implementation needed
-});
-
 // ===============================
 // FILE UPLOAD ACTIONS
 // ===============================
@@ -315,10 +259,7 @@ When(/^I select file "([^"]*)" from file picker$/, async (filePath: string) => {
     // Implementation needed
 });
 
-When(/^I upload file "([^"]*)" to (\w+)$/, async (filePath: string, elementName: string) => {
-    console.log(`When: Uploading file "${filePath}" to ${elementName}`);
-    // Implementation needed
-});
+
 
 // ===============================
 // ALERT AND MODAL ACTIONS
@@ -348,15 +289,7 @@ When(/^I click outside the modal$/, async () => {
     // Implementation needed
 });
 
-When(/^I accept the alert$/, async () => {
-    console.log('When: Accepting the alert');
-    // Implementation needed
-});
 
-When(/^I dismiss the alert$/, async () => {
-    console.log('When: Dismissing the alert');
-    // Implementation needed
-});
 
 // ===============================
 // MOBILE-SPECIFIC ACTIONS
@@ -424,10 +357,7 @@ When(/^I fill form with:$/, async (dataTable: any) => {
     // Implementation needed for data table
 });
 
-When(/^I submit the form$/, async () => {
-    console.log('When: Submitting the form');
-    // Implementation needed
-});
+
 
 // ===============================
 // KEYBOARD ACTIONS
@@ -442,10 +372,7 @@ When(/^I press key combination "([^"]*)"$/, async (keys: string) => {
     // Implementation needed
 });
 
-When(/^I press (Enter|Tab|Escape|Space|Backspace|Delete) key$/, async (key: string) => {
-    console.log(`When: Pressing ${key} key`);
-    // Implementation needed
-});
+
 
 // ===============================
 // DRAG AND DROP ACTIONS
@@ -460,7 +387,3 @@ When(/^I drag (\w+) by offset \((\d+),(\d+)\)$/, async (elementName: string, x: 
     // Implementation needed
 });
 
-When(/^I drag (\w+) to (\w+)$/, async (sourceElement: string, targetElement: string) => {
-    console.log(`When: Dragging ${sourceElement} to ${targetElement}`);
-    // Implementation needed
-});

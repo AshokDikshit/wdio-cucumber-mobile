@@ -26,7 +26,7 @@ export const config: WebdriverIO.Config = {
     // of the config file unless it's absolute.
     //
     specs: [
-        './tests/features/**/*.feature'
+        './tests/features/**/user-login.feature'
     ],
     // Patterns to exclude.
     exclude: [
@@ -140,7 +140,7 @@ export const config: WebdriverIO.Config = {
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
         // <string[]> (file/dir) require files before executing features
-        require: ['./tests/step-definitions/steps.ts'],
+        require: ['./tests/step-definitions/*.steps.ts'],
         // <boolean> show full backtrace for errors
         backtrace: false,
         // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)

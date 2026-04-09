@@ -26,7 +26,7 @@ export const config: WebdriverIO.Config = {
     // of the config file unless it's absolute.
     //
     specs: [
-        './tests/features/**/user-login.feature'
+        './tests/features/**/login.feature'
     ],
     // Patterns to exclude.
     exclude: [
@@ -58,11 +58,29 @@ export const config: WebdriverIO.Config = {
         // capabilities for local Appium web tests on an Android Emulator
         platformName: 'Android',
         browserName: 'Chrome',
-        'appium:deviceName': 'Pixel 9 API 35',
+
+        'appium:deviceName': 'emulator-5554',
         'appium:platformVersion': '15.0',
         'appium:automationName': 'UiAutomator2',
         'appium:chromedriverAutodownload': true,
-        'appium:chromedriverExecutable': './node_modules/chromedriver/bin/chromedriver'
+        'appium:chromedriverChromeMappingFile': './chromedriver-mapping.json',
+        'appium:udid': 'emulator-5554',
+        // Additional Appium options to ensure proper connection
+        'appium:newCommandTimeout': 300,
+        'appium:connectHardwareKeyboard': true,
+        'appium:noReset': true,
+        'appium:fullReset': false,
+        // Chrome options for Appium (use only appium:chromeOptions for mobile web testing)
+        'appium:chromeOptions': {
+            w3c: false,
+            args: [
+                '--disable-dev-shm-usage',
+                '--no-sandbox',
+                '--disable-gpu',
+                '--disable-web-security',
+                '--remote-debugging-port=0'
+            ]
+        }
     } as any],
 
     //
@@ -135,7 +153,35 @@ export const config: WebdriverIO.Config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec'],
+    reporters: [
+        'spec',
+        ['allure', {
+            outputDir: 'allure-results',
+            disableWebdriverStepsReporting: true,
+            disableWebdriverScreenshotsReporting: true,
+        }],
+        ['json', {
+            outputDir: './test-results',
+            outputFileFormat: function(options: any) {
+                return `results-${options.cid}.json`;
+            }
+        }],
+        ['junit', {
+            outputDir: './test-results',
+            outputFileFormat: function(options: any) {
+                return `results-${options.cid}.xml`;
+            }
+        }],
+        ['html-nice', {
+            outputDir: './test-results/html-reports/',
+            filename: 'report.html',
+            reportTitle: 'Test Execution Report',
+            linkScreenshots: true,
+            showInBrowser: false,
+            collapseTests: false,
+            useOnAfterCommandForScreenshot: false
+        }]
+    ],
 
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
@@ -162,7 +208,20 @@ export const config: WebdriverIO.Config = {
         // <number> timeout for step definitions
         timeout: 60000,
         // <boolean> Enable this config to treat undefined definitions as warnings.
-        ignoreUndefinedDefinitions: false
+        ignoreUndefinedDefinitions: false,
+        // Cucumber formatters for generating test results
+        format: [
+            'pretty',
+            ['json', './test-results/cucumber-report.json'],
+            ['html', './test-results/cucumber-report.html'],
+            ['junit', './test-results/cucumber-junit.xml'],
+
+            ['@cucumber/pretty-formatter', './test-results/cucumber-pretty.txt'],
+            ['rerun', './test-results/rerun.txt']
+        ],
+        // Publish results to Cucumber Reports (optional)
+
+        publish: false
     },
 
 
@@ -179,8 +238,30 @@ export const config: WebdriverIO.Config = {
      * @param {object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onPrepare: function (config, capabilities) {
-    // },
+    onPrepare: function (config, capabilities) {
+        const fs = require('fs');
+        const path = require('path');
+        
+        // Clean up previous test results
+        const resultsDir = './test-results';
+        const allureResultsDir = './allure-results';
+        const allureReportDir = './allure-report';
+        
+        // Remove existing result directories
+        [resultsDir, allureResultsDir, allureReportDir].forEach(dir => {
+            if (fs.existsSync(dir)) {
+                fs.rmSync(dir, { recursive: true, force: true });
+                console.log(`Cleaned up previous results: ${dir}`);
+            }
+        });
+        
+        // Create fresh result directories
+        [resultsDir, `${resultsDir}/html-reports`].forEach(dir => {
+            fs.mkdirSync(dir, { recursive: true });
+        });
+        
+        console.log('Test result directories prepared for new execution');
+    },
     /**
      * Gets executed before a worker process is spawned and can be used to initialize specific service
      * for that worker as well as modify runtime environments in an async fashion.
@@ -321,8 +402,132 @@ export const config: WebdriverIO.Config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {<Object>} results object containing test results
      */
+    
     // onComplete: function(exitCode, config, capabilities, results) {
+    //     const fs = require('fs');
+    //     const path = require('path');
+        
+    //     // Ensure test-results directory exists
+    //     const resultsDir = './test-results';
+    //     if (!fs.existsSync(resultsDir)) {
+    //         fs.mkdirSync(resultsDir, { recursive: true });
+    //     }
+        
+    //     // Generate consolidated test summary
+    //     const summary = {
+    //         timestamp: new Date().toISOString(),
+    //         exitCode: exitCode,
+    //         totalSpecs: results.specs?.length || 0,
+    //         totalTests: results.tests || 0,
+    //         passed: results.passed || 0,
+    //         failed: results.failed || 0,
+    //         skipped: results.skipped || 0,
+    //         duration: results.duration || 0,
+    //         capabilities: capabilities,
+    //         specs: results.specs || []
+    //     };
+        
+    //     // Write summary to JSON file
+    //     const summaryPath = path.join(resultsDir, 'test-summary.json');
+    //     fs.writeFileSync(summaryPath, JSON.stringify(summary, null, 2));
+        
+    //     // Log test completion status
+    //     console.log('\n=== TEST EXECUTION COMPLETED ===');
+    //     console.log(`Exit Code: ${exitCode}`);
+    //     console.log(`Total Tests: ${summary.totalTests}`);
+    //     console.log(`Passed: ${summary.passed}`);
+    //     console.log(`Failed: ${summary.failed}`);
+    //     console.log(`Skipped: ${summary.skipped}`);
+    //     console.log(`Duration: ${summary.duration}ms`);
+    //     console.log(`\nTest results saved to: ${resultsDir}`);
+    //     console.log('================================\n');
+        
+    //     // Generate Cucumber summary report
+    //     if (fs.existsSync('./test-results/cucumber-report.json')) {
+    //         console.log('\nProcessing Cucumber JSON report...');
+    //         try {
+    //             const cucumberJsonPath = './test-results/cucumber-report.json';
+    //             const cucumberSummaryPath = './test-results/cucumber-summary.json';
+                
+    //             // Read and process the JSON report
+    //             const cucumberData = JSON.parse(fs.readFileSync(cucumberJsonPath, 'utf8'));
+                
+    //             // Generate summary statistics
+    //             let totalScenarios = 0;
+    //             let passedScenarios = 0;
+    //             let failedScenarios = 0;
+    //             let skippedScenarios = 0;
+                
+    //             cucumberData.forEach((feature: any) => {
+    //                 if (feature.elements) {
+    //                     feature.elements.forEach((scenario: any) => {
+    //                         totalScenarios++;
+    //                         const steps = scenario.steps || [];
+    //                         const hasFailedStep = steps.some((step: any) => step.result && step.result.status === 'failed');
+    //                         const hasSkippedStep = steps.some((step: any) => step.result && step.result.status === 'skipped');
+                            
+    //                         if (hasFailedStep) {
+    //                             failedScenarios++;
+    //                         } else if (hasSkippedStep) {
+    //                             skippedScenarios++;
+    //                         } else {
+    //                             passedScenarios++;
+    //                         }
+    //                     });
+    //                 }
+    //             });
+                
+    //             const cucumberSummary = {
+    //                 timestamp: new Date().toISOString(),
+    //                 totalFeatures: cucumberData.length,
+    //                 totalScenarios,
+    //                 passedScenarios,
+    //                 failedScenarios,
+    //                 skippedScenarios,
+    //                 successRate: totalScenarios > 0 ? ((passedScenarios / totalScenarios) * 100).toFixed(2) + '%' : '0%'
+    //             };
+                
+    //             fs.writeFileSync(cucumberSummaryPath, JSON.stringify(cucumberSummary, null, 2));
+    //             console.log(`Cucumber summary generated at: ${cucumberSummaryPath}`);
+    //         } catch (error: any) {
+    //             console.log('Warning: Could not process Cucumber JSON report:', error?.message || 'Unknown error');
+    //         }
+    //     }
+        
+    //     // Generate Allure report if allure-results exist (without opening)
+    //     if (fs.existsSync('./allure-results')) {
+    //         console.log('\nGenerating Allure report...');
+    //         try {
+    //             const { execSync } = require('child_process');
+    //             // Generate report without opening it automatically
+    //             execSync('npx allure generate allure-results --clean -o allure-report', { stdio: 'inherit' });
+    //             console.log('Allure report generated at: ./allure-report');
+    //             console.log('To open the report, run: npm run allure:open');
+    //         } catch (error) {
+    //             console.log('Note: Install allure-commandline to generate Allure reports: npm install -g allure-commandline');
+    //         }
+    //     }
+        
+    //     // Display report locations
+    //     console.log('\n=== AVAILABLE REPORTS ===');
+    //     if (fs.existsSync('./test-results/cucumber-report.html')) {
+    //         console.log('📊 Cucumber HTML Report: ./test-results/cucumber-report.html');
+    //     }
+    //     if (fs.existsSync('./test-results/cucumber-report.json')) {
+    //         console.log('� Cucumber JSON Report: ./test-results/cucumber-report.json');
+    //     }
+    //     if (fs.existsSync('./test-results/cucumber-summary.json')) {
+    //         console.log('📈 Cucumber Summary: ./test-results/cucumber-summary.json');
+    //     }
+    //     if (fs.existsSync('./allure-report/index.html')) {
+    //         console.log('🎯 Allure Report: ./allure-report/index.html');
+    //     }
+    //     if (fs.existsSync('./test-results/html-reports/report.html')) {
+    //         console.log('📋 HTML Nice Report: ./test-results/html-reports/report.html');
+    //     }
+    //     console.log('==========================');
     // },
+
     /**
     * Gets executed when a refresh happens.
     * @param {string} oldSessionId session ID of the old session

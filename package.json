@@ -22,7 +22,7 @@
     "@wdio/visual-service": "^9.2.1",
     "appium-chromedriver": "^8.2.24",
     "appium-uiautomator2-driver": "^7.1.0",
-    "chromedriver": "^135.0.4",
+    "chromedriver": "^135.0.0",
     "expect-webdriverio": "^5.6.5"
   }
 }

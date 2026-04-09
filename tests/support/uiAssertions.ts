@@ -5,11 +5,12 @@
 
 import { $, $$, browser } from '@wdio/globals';
 import type { ChainablePromiseElement } from 'webdriverio';
+import commonUtils from './commonUtils';
 
 class UIAssertions {
     
     // ===============================
-    // ELEMENT LOCATOR HELPERS
+    // ELEMENT LOCATOR HELPERS (Using Common Utils)
     // ===============================
     
     /**
@@ -19,16 +20,7 @@ class UIAssertions {
      * @returns WebDriverIO element
      */
     private async getElement(elementName: string, elementType?: string): Promise<ChainablePromiseElement> {
-        try {
-            // Implement your element locator strategy here
-            // This could use page object pattern, data-testid, accessibility ids, etc.
-            const selector = `[data-testid="${elementName}"]`; // Example selector strategy
-            const element = await $(selector);
-            await element.waitForExist({ timeout: 10000 });
-            return element;
-        } catch (error) {
-            throw new Error(`Element '${elementName}' of type '${elementType}' not found: ${error}`);
-        }
+        return await commonUtils.getElement(elementName, elementType);
     }
 
     /**
@@ -37,21 +29,7 @@ class UIAssertions {
      * @param state - State to wait for (visible, clickable, enabled)
      */
     private async waitForElementState(element: ChainablePromiseElement, state: 'visible' | 'clickable' | 'enabled'): Promise<void> {
-        try {
-            switch (state) {
-                case 'visible':
-                    await element.waitForDisplayed({ timeout: 10000 });
-                    break;
-                case 'clickable':
-                    await element.waitForClickable({ timeout: 10000 });
-                    break;
-                case 'enabled':
-                    await element.waitForEnabled({ timeout: 10000 });
-                    break;
-            }
-        } catch (error) {
-            throw new Error(`Element failed to reach '${state}' state: ${error}`);
-        }
+        return await commonUtils.waitForElementState(element, state);
     }
     
     // ===============================
@@ -379,8 +357,8 @@ class UIAssertions {
      */
     async verifyElementCount(elementName: string, count: number): Promise<void> {
         try {
-            const elements = await $$(`[data-testid*="${elementName}"]`);
-            const actualCount = await elements.length;
+            const elements = await commonUtils.getElementsByName(elementName);
+            const actualCount = elements.length;
             if (actualCount !== count) {
                 throw new Error(`Expected ${count} ${elementName} elements but found ${actualCount}`);
             }
@@ -395,8 +373,8 @@ class UIAssertions {
      */
     async verifyElementCountAtLeast(elementName: string, count: number): Promise<void> {
         try {
-            const elements = await $$(`[data-testid*="${elementName}"]`);
-            const actualCount = await elements.length;
+            const elements = await commonUtils.getElementsByName(elementName);
+            const actualCount = elements.length;
             if (actualCount < count) {
                 throw new Error(`Expected at least ${count} ${elementName} elements but found ${actualCount}`);
             }
@@ -411,8 +389,8 @@ class UIAssertions {
      */
     async verifyElementCountAtMost(elementName: string, count: number): Promise<void> {
         try {
-            const elements = await $$(`[data-testid*="${elementName}"]`);
-            const actualCount = await elements.length;
+            const elements = await commonUtils.getElementsByName(elementName);
+            const actualCount = elements.length;
             if (actualCount > count) {
                 throw new Error(`Expected at most ${count} ${elementName} elements but found ${actualCount}`);
             }
@@ -715,8 +693,7 @@ class UIAssertions {
     async verifyDeviceOrientation(orientation: string): Promise<void> {
         try {
             // Check if browser has mobile capabilities
-            const capabilities = browser.capabilities;
-            const isMobile = capabilities.platformName === 'Android' || capabilities.platformName === 'iOS';
+            const isMobile = commonUtils.isMobilePlatform();
             
             if (isMobile) {
                 const currentOrientation = await (browser as any).getOrientation();
@@ -775,7 +752,7 @@ class UIAssertions {
      */
     async verifyElementAppearsWithin(elementName: string, timeout: number): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await commonUtils.getElement(elementName, 'element');
             await element.waitForDisplayed({ timeout: timeout * 1000 });
             console.log(`Successfully verified ${elementName} appeared within ${timeout} seconds`);
         } catch (error) {
@@ -788,7 +765,7 @@ class UIAssertions {
      */
     async verifyElementDisappearsWithin(elementName: string, timeout: number): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await commonUtils.getElement(elementName, 'element');
             await element.waitForDisplayed({ timeout: timeout * 1000, reverse: true });
             console.log(`Successfully verified ${elementName} disappeared within ${timeout} seconds`);
         } catch (error) {
@@ -801,7 +778,7 @@ class UIAssertions {
      */
     async verifyElementBackgroundColor(elementName: string, color: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await commonUtils.getElement(elementName, 'element');
             const backgroundColor = await element.getCSSProperty('background-color');
             const actualColor = backgroundColor.value;
             if (actualColor !== color) {
@@ -818,7 +795,7 @@ class UIAssertions {
      */
     async verifyElementTextColor(elementName: string, color: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await commonUtils.getElement(elementName, 'element');
             const textColor = await element.getCSSProperty('color');
             const actualColor = textColor.value;
             if (actualColor !== color) {
@@ -835,7 +812,7 @@ class UIAssertions {
      */
     async verifyElementPosition(elementName: string, x: number, y: number): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await commonUtils.getElement(elementName, 'element');
             const location = await element.getLocation();
             if (location.x !== x || location.y !== y) {
                 throw new Error(`Element '${elementName}' is positioned at (${location.x},${location.y}) but should be at (${x},${y})`);

@@ -12,6 +12,7 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^25.5.2",
     "@wdio/appium-service": "^9.27.0",
     "@wdio/cli": "^9.27.0",
@@ -23,6 +24,7 @@
     "appium-chromedriver": "^8.2.24",
     "appium-uiautomator2-driver": "^7.1.0",
     "chromedriver": "^135.0.4",
-    "expect-webdriverio": "^5.6.5"
+    "expect-webdriverio": "^5.6.5",
+    "js-yaml": "^4.1.1"
   }
 }

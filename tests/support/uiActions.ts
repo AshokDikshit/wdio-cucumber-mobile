@@ -1,5 +1,6 @@
 import { $, $$, browser } from '@wdio/globals';
 import type { ChainablePromiseElement } from 'webdriverio';
+import commonUtils from './commonUtils';
 
 // Type definitions for mobile-specific browser capabilities
 interface MobileBrowser {
@@ -33,7 +34,7 @@ interface TouchAction {
 class UIActions {
     
     // ===============================
-    // ELEMENT LOCATOR HELPERS
+    // ELEMENT LOCATOR HELPERS (Using Common Utils)
     // ===============================
     
     /**
@@ -43,16 +44,7 @@ class UIActions {
      * @returns WebDriverIO element
      */
     private async getElement(elementName: string, elementType?: string): Promise<ChainablePromiseElement> {
-        try {
-            // Implement your element locator strategy here
-            // This could use page object pattern, data-testid, accessibility ids, etc.
-            const selector = `[data-testid="${elementName}"]`; // Example selector strategy
-            const element = await $(selector);
-            await element.waitForExist({ timeout: 10000 });
-            return element;
-        } catch (error) {
-            throw new Error(`Element '${elementName}' of type '${elementType}' not found: ${error}`);
-        }
+        return await commonUtils.getElement(elementName, elementType);
     }
 
     /**
@@ -61,21 +53,7 @@ class UIActions {
      * @param state - State to wait for (visible, clickable, enabled)
      */
     private async waitForElementState(element: ChainablePromiseElement, state: 'visible' | 'clickable' | 'enabled'): Promise<void> {
-        try {
-            switch (state) {
-                case 'visible':
-                    await element.waitForDisplayed({ timeout: 10000 });
-                    break;
-                case 'clickable':
-                    await element.waitForClickable({ timeout: 10000 });
-                    break;
-                case 'enabled':
-                    await element.waitForEnabled({ timeout: 10000 });
-                    break;
-            }
-        } catch (error) {
-            throw new Error(`Element failed to reach '${state}' state: ${error}`);
-        }
+        return await commonUtils.waitForElementState(element, state);
     }
 
     // ===============================
@@ -876,7 +854,7 @@ class UIActions {
     async waitSeconds(seconds: string): Promise<void> {
         try {
             const ms = parseInt(seconds) * 1000;
-            await browser.pause(ms);
+            await commonUtils.pause(ms);
             console.log(`Successfully waited ${seconds} seconds`);
         } catch (error) {
             throw new Error(`Failed to wait ${seconds} seconds: ${error}`);
@@ -888,16 +866,7 @@ class UIActions {
      */
     async waitForPageLoad(): Promise<void> {
         try {
-            await browser.waitUntil(
-                async () => {
-                    const readyState = await browser.execute(() => document.readyState);
-                    return readyState === 'complete';
-                },
-                {
-                    timeout: 30000,
-                    timeoutMsg: 'Page did not load within 30 seconds'
-                }
-            );
+            await commonUtils.waitForPageReady(30000);
             console.log('Successfully waited for page to load');
         } catch (error) {
             throw new Error(`Failed to wait for page load: ${error}`);
@@ -1132,9 +1101,7 @@ class UIActions {
      */
     async takeScreenshot(): Promise<void> {
         try {
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const filename = `screenshot-${timestamp}.png`;
-            await browser.saveScreenshot(`./screenshots/${filename}`);
+            const filename = await commonUtils.takeScreenshot();
             console.log(`Successfully took screenshot: ${filename}`);
         } catch (error) {
             throw new Error(`Failed to take screenshot: ${error}`);

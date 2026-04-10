@@ -20,43 +20,43 @@ defineParameterType({
 // This file contains only assertion steps (Then) that verify conditions
 // For actions and operations, see global-actions.steps.ts
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should be visible$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be visible$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be visible`);
     await uiAssertions.verifyElementVisible(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should not be visible$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should not be visible$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should not be visible`);
     await uiAssertions.verifyElementNotVisible(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should be displayed$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be displayed$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be displayed`);
     await uiAssertions.verifyElementDisplayed(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should be hidden$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be hidden$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be hidden`);
     await uiAssertions.verifyElementHidden(element, elementType);
 });
 
 // Element State Assertions
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should be enabled$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be enabled$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be enabled`);
     await uiAssertions.verifyElementEnabled(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should be disabled$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be disabled$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be disabled`);
     await uiAssertions.verifyElementDisabled(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should be selected$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be selected$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be selected`);
     await uiAssertions.verifyElementSelected(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should not be selected$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should not be selected$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should not be selected`);
     await uiAssertions.verifyElementNotSelected(element, elementType);
 });
@@ -72,48 +72,48 @@ Then(/^"([^"]*)" checkbox should be unchecked$/, async (element: string) => {
 });
 
 // Text and Content Assertions
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should contain text "([^"]*)"$/, async (element: string, elementType: string, text: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should contain text "([^"]*)"$/, async (element: string, elementType: string, text: string) => {
     console.log(`Verifying ${element} ${elementType} should contain text "${text}"`);
     await uiAssertions.verifyElementContainsText(element, text, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should not contain text "([^"]*)"$/, async (element: string, elementType: string, text: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should not contain text "([^"]*)"$/, async (element: string, elementType: string, text: string) => {
     console.log(`Verifying ${element} ${elementType} should not contain text "${text}"`);
     // Implementation needed
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should have exact text "([^"]*)"$/, async (element: string, elementType: string, text: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should have exact text "([^"]*)"$/, async (element: string, elementType: string, text: string) => {
     console.log(`Verifying ${element} ${elementType} should have exact text "${text}"`);
     await uiAssertions.verifyElementExactText(element, text, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should be empty$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be empty$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be empty`);
     await uiAssertions.verifyFieldEmpty(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should have value "([^"]*)"$/, async (element: string, elementType: string, value: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should have value "([^"]*)"$/, async (element: string, elementType: string, value: string) => {
     console.log(`Verifying ${element} ${elementType} should have value "${value}"`);
     await uiAssertions.verifyElementValue(element, value, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should have placeholder "([^"]*)"$/, async (element: string, elementType: string, placeholder: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should have placeholder "([^"]*)"$/, async (element: string, elementType: string, placeholder: string) => {
     console.log(`Verifying ${element} ${elementType} should have placeholder "${placeholder}"`);
     await uiAssertions.verifyElementPlaceholder(element, placeholder, elementType);
 });
 
 // Attribute and Property Assertions
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should have attribute "([^"]*)" with value "([^"]*)"$/, async (element: string, elementType: string, attribute: string, value: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should have attribute "([^"]*)" with value "([^"]*)"$/, async (element: string, elementType: string, attribute: string, value: string) => {
     console.log(`Verifying ${element} ${elementType} should have attribute "${attribute}" with value "${value}"`);
     await uiAssertions.verifyElementAttribute(element, attribute, value, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should have class "([^"]*)"$/, async (element: string, elementType: string, className: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should have class "([^"]*)"$/, async (element: string, elementType: string, className: string) => {
     console.log(`Verifying ${element} ${elementType} should have class "${className}"`);
     await uiAssertions.verifyElementHasClass(element, className, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should not have class "([^"]*)"$/, async (element: string, elementType: string, className: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should not have class "([^"]*)"$/, async (element: string, elementType: string, className: string) => {
     console.log(`Verifying ${element} ${elementType} should not have class "${className}"`);
     await uiAssertions.verifyElementNotHasClass(element, className, elementType);
 });
@@ -187,13 +187,13 @@ Then(/^no modal should be open$/, async () => {
 });
 
 // Form Validation Assertions
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should show validation error "([^"]*)"$/, async (element: string, elementType: string, error: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should show validation error "([^"]*)"$/, async (element: string, elementType: string, error: string) => {
     console.log(`Verifying ${element} ${elementType} should show validation error "${error}"`);
 
     await uiAssertions.verifyValidationError(element, error, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should not show any validation error$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should not show any validation error$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should not show any validation error`);
 
     await uiAssertions.verifyNoValidationError(element, elementType);
@@ -215,13 +215,13 @@ Then(/^the page should be loaded$/, async () => {
     await uiAssertions.verifyPageLoaded();
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should be loading$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be loading$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be loading`);
 
     await uiAssertions.verifyElementLoading(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should not be loading$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should not be loading$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should not be loading`);
     await uiAssertions.verifyElementNotLoading(element, elementType);
 });
@@ -243,28 +243,28 @@ Then(/^the keyboard should be hidden$/, async () => {
 });
 
 // Wait-based Assertions
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should appear within (\d+) seconds$/, async (element: string, elementType: string, timeout: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should appear within (\d+) seconds$/, async (element: string, elementType: string, timeout: string) => {
     console.log(`Verifying ${element} ${elementType} should appear within ${timeout} seconds`);
     await uiAssertions.verifyElementAppearsWithin(element, parseInt(timeout), elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should disappear within (\d+) seconds$/, async (element: string, elementType: string, timeout: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should disappear within (\d+) seconds$/, async (element: string, elementType: string, timeout: string) => {
     console.log(`Verifying ${element} ${elementType} should disappear within ${timeout} seconds`);
     await uiAssertions.verifyElementDisappearsWithin(element, parseInt(timeout), elementType);
 });
 
 // Style and Visual Assertions
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should have background color "([^"]*)"$/, async (element: string, elementType: string, color: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should have background color "([^"]*)"$/, async (element: string, elementType: string, color: string) => {
     console.log(`Verifying ${element} ${elementType} should have background color "${color}"`);
     await uiAssertions.verifyElementBackgroundColor(element, color, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should have text color "([^"]*)"$/, async (element: string, elementType: string, color: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should have text color "([^"]*)"$/, async (element: string, elementType: string, color: string) => {
     console.log(`Verifying ${element} ${elementType} should have text color "${color}"`);
     await uiAssertions.verifyElementTextColor(element, color, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should be positioned at coordinates \((\d+),(\d+)\)$/, async (element: string, elementType: string, x: string, y: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be positioned at coordinates \((\d+),(\d+)\)$/, async (element: string, elementType: string, x: string, y: string) => {
     console.log(`Verifying ${element} ${elementType} should be positioned at coordinates (${x},${y})`);
     await uiAssertions.verifyElementPosition(element, parseInt(x), parseInt(y), elementType);
 });

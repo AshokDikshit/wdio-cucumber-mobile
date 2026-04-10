@@ -8,3 +8,8 @@ common:
   shoppingCartBadge: "//span[@class='shopping_cart_badge']"
   shoppingCartLink: "//a[@class='shopping_cart_link']"
   cartContents: "//div[@id='cart_contents_container']"
+  # The Internet Herokuapp login page locators
+  usernameField: "//input[@id='username']"
+  passwordField: "//input[@id='password']"
+  loginButton: "//button[@type='submit']"
+  errorMessage: "//div[@id='flash']"

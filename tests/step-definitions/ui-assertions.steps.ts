@@ -17,11 +17,16 @@ defineParameterType({
 // ===============================
 // This file contains only assertion steps (Then) that verify conditions
 // For actions and operations, see global-actions.steps.ts
- 
-Then(/^"([^"]*)" {elementType} should be visible$/, async (element: string, elementType: string) => {
+
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section) should be visible$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be visible`);
     await uiAssertions.verifyElementVisible(element, elementType);
 });
+
+// Then(/^"([^"]*)" {elementType} should be visible$/, async (element: string, elementType: string) => {
+//     console.log(`Verifying ${element} ${elementType} should be visible`);
+//     await uiAssertions.verifyElementVisible(element, elementType);
+// });
 
 Then(/^"([^"]*)" {elementType} should not be visible$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should not be visible`);

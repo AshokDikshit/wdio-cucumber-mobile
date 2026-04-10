@@ -61,9 +61,17 @@ export const config: WebdriverIO.Config = {
         'appium:deviceName': 'Pixel 9 API 35',
         'appium:platformVersion': '15.0',
         'appium:automationName': 'UiAutomator2',
-        'appium:chromedriverAutodownload': true,
-        'appium:chromedriverExecutable': './node_modules/chromedriver/bin/chromedriver'
+
+        'goog:chromeOptions': {
+            args: ['--no-sandbox', '--disable-dev-shm-usage']
+        },
+        // Force classic protocol, BiDi protocol is throwing some 404 error though still works fine with the tests
+        'wdio:enforceWebDriverClassic': true
+
+        // 'appium:chromedriverAutodownload': true,
+        // 'appium:chromedriverExecutable': './node_modules/chromedriver/bin/chromedriver'
     } as any],
+    automationProtocol: 'webdriver',
 
     //
     // ===================
@@ -72,7 +80,7 @@ export const config: WebdriverIO.Config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: 'info',
+    logLevel: 'error',
     //
     // Set specific log levels per logger
     // loggers:
@@ -112,8 +120,8 @@ export const config: WebdriverIO.Config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['appium', 'visual'],
-
+    // services: ['appium', 'visual'],
+    services: ['appium'],
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
     // see also: https://webdriver.io/docs/frameworks

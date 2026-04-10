@@ -158,6 +158,10 @@ class LocatorManager {
       switch (elementType.toLowerCase()) {
         case 'button':
           return `//button[contains(text(),'${escapedText}')] | //*[@role='button'][contains(text(),'${escapedText}')] | //input[@type='button' and contains(@value,'${escapedText}')] | //input[@type='submit' and contains(@value,'${escapedText}')]`;
+        case 'input':
+          return `//input[@type='text' and contains(@placeholder,'${escapedText}')] | //input[@type='secure' and contains(@placeholder,'${escapedText}')] | //input[@type='password' and contains(@placeholder,'${escapedText}')]`;
+        case 'field':
+          return `//input[@type='text' and contains(@placeholder,'${escapedText}')] | //input[@type='secure' and contains(@placeholder,'${escapedText}')] | //input[@type='password' and contains(@placeholder,'${escapedText}')]`;
         case 'link':
           return `//a[contains(text(),'${escapedText}')] | //*[@role='link'][contains(text(),'${escapedText}')]`;
         case 'label':

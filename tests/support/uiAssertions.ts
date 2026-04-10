@@ -38,9 +38,9 @@ class UIAssertions {
     /**
      * Verify that an element is visible
      */
-    async verifyElementVisible(elementName: string): Promise<void> {
+    async verifyElementVisible(elementName: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             await this.waitForElementState(element, 'visible');
             const isDisplayed = await element.isDisplayed();
             if (!isDisplayed) {
@@ -55,9 +55,9 @@ class UIAssertions {
     /**
      * Verify that an element is not visible
      */
-    async verifyElementNotVisible(elementName: string): Promise<void> {
+    async verifyElementNotVisible(elementName: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             const isDisplayed = await element.isDisplayed();
             if (isDisplayed) {
                 throw new Error(`Element '${elementName}' is visible but should not be`);
@@ -72,9 +72,9 @@ class UIAssertions {
     /**
      * Verify that an element is displayed
      */
-    async verifyElementDisplayed(elementName: string): Promise<void> {
+    async verifyElementDisplayed(elementName: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             await this.waitForElementState(element, 'visible');
             console.log(`Successfully verified ${elementName} is displayed`);
         } catch (error) {
@@ -85,9 +85,9 @@ class UIAssertions {
     /**
      * Verify that an element is hidden
      */
-    async verifyElementHidden(elementName: string): Promise<void> {
+    async verifyElementHidden(elementName: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             await element.waitForDisplayed({ timeout: 10000, reverse: true });
             console.log(`Successfully verified ${elementName} is hidden`);
         } catch (error) {
@@ -98,9 +98,9 @@ class UIAssertions {
     /**
      * Verify that an element is enabled
      */
-    async verifyElementEnabled(elementName: string): Promise<void> {
+    async verifyElementEnabled(elementName: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             await this.waitForElementState(element, 'enabled');
             const isEnabled = await element.isEnabled();
             if (!isEnabled) {
@@ -115,9 +115,9 @@ class UIAssertions {
     /**
      * Verify that an element is disabled
      */
-    async verifyElementDisabled(elementName: string): Promise<void> {
+    async verifyElementDisabled(elementName: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             const isEnabled = await element.isEnabled();
             if (isEnabled) {
                 throw new Error(`Element '${elementName}' is enabled but should be disabled`);
@@ -131,9 +131,9 @@ class UIAssertions {
     /**
      * Verify that an element is selected
      */
-    async verifyElementSelected(elementName: string): Promise<void> {
+    async verifyElementSelected(elementName: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             const isSelected = await element.isSelected();
             if (!isSelected) {
                 throw new Error(`Element '${elementName}' is not selected`);
@@ -147,9 +147,9 @@ class UIAssertions {
     /**
      * Verify that an element is not selected
      */
-    async verifyElementNotSelected(elementName: string): Promise<void> {
+    async verifyElementNotSelected(elementName: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             const isSelected = await element.isSelected();
             if (isSelected) {
                 throw new Error(`Element '${elementName}' is selected but should not be`);
@@ -195,9 +195,9 @@ class UIAssertions {
     /**
      * Verify that an element contains specific text
      */
-    async verifyElementContainsText(elementName: string, text: string): Promise<void> {
+    async verifyElementContainsText(elementName: string, text: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             const elementText = await element.getText();
             if (!elementText.includes(text)) {
                 throw new Error(`Element '${elementName}' does not contain text '${text}'. Actual text: '${elementText}'`);
@@ -227,9 +227,9 @@ class UIAssertions {
     /**
      * Verify that an element has exact text
      */
-    async verifyElementExactText(elementName: string, text: string): Promise<void> {
+    async verifyElementExactText(elementName: string, text: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             const elementText = await element.getText();
             if (elementText !== text) {
                 throw new Error(`Element '${elementName}' does not have exact text '${text}'. Actual text: '${elementText}'`);
@@ -243,9 +243,9 @@ class UIAssertions {
     /**
      * Verify that a field is empty
      */
-    async verifyFieldEmpty(elementName: string): Promise<void> {
+    async verifyFieldEmpty(elementName: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'field');
+            const element = await this.getElement(elementName, elementType || 'field');
             const value = await element.getValue();
             if (value && value.trim() !== '') {
                 throw new Error(`Field '${elementName}' is not empty. Current value: '${value}'`);
@@ -275,9 +275,9 @@ class UIAssertions {
     /**
      * Verify that an element has a specific value
      */
-    async verifyElementValue(elementName: string, value: string): Promise<void> {
+    async verifyElementValue(elementName: string, value: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             const actualValue = await element.getValue();
             if (actualValue !== value) {
                 throw new Error(`Element '${elementName}' does not have value '${value}'. Actual value: '${actualValue}'`);
@@ -291,9 +291,9 @@ class UIAssertions {
     /**
      * Verify that an element has a specific placeholder
      */
-    async verifyElementPlaceholder(elementName: string, placeholder: string): Promise<void> {
+    async verifyElementPlaceholder(elementName: string, placeholder: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             const actualPlaceholder = await element.getAttribute('placeholder');
             if (actualPlaceholder !== placeholder) {
                 throw new Error(`Element '${elementName}' does not have placeholder '${placeholder}'. Actual placeholder: '${actualPlaceholder}'`);
@@ -307,9 +307,9 @@ class UIAssertions {
     /**
      * Verify that an element has a specific attribute with a specific value
      */
-    async verifyElementAttribute(elementName: string, attribute: string, value: string): Promise<void> {
+    async verifyElementAttribute(elementName: string, attribute: string, value: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             const actualValue = await element.getAttribute(attribute);
             if (actualValue !== value) {
                 throw new Error(`Element '${elementName}' does not have attribute '${attribute}' with value '${value}'. Actual value: '${actualValue}'`);
@@ -323,9 +323,9 @@ class UIAssertions {
     /**
      * Verify that an element has a specific class
      */
-    async verifyElementHasClass(elementName: string, className: string): Promise<void> {
+    async verifyElementHasClass(elementName: string, className: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             const classNames = await element.getAttribute('class');
             if (!classNames || !classNames.includes(className)) {
                 throw new Error(`Element '${elementName}' does not have class '${className}'. Current classes: '${classNames}'`);
@@ -339,9 +339,9 @@ class UIAssertions {
     /**
      * Verify that an element does not have a specific class
      */
-    async verifyElementNotHasClass(elementName: string, className: string): Promise<void> {
+    async verifyElementNotHasClass(elementName: string, className: string, elementType?: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType || 'element');
             const classNames = await element.getAttribute('class');
             if (classNames && classNames.includes(className)) {
                 throw new Error(`Element '${elementName}' has class '${className}' but should not. Current classes: '${classNames}'`);
@@ -570,7 +570,7 @@ class UIAssertions {
     /**
      * Verify validation error
      */
-    async verifyValidationError(elementName: string, error: string): Promise<void> {
+    async verifyValidationError(elementName: string, error: string, elementType?: string): Promise<void> {
         try {
             const errorElement = await $(`[data-testid="${elementName}-error"], .error-message`);
             const errorText = await errorElement.getText();
@@ -586,7 +586,7 @@ class UIAssertions {
     /**
      * Verify no validation error
      */
-    async verifyNoValidationError(elementName: string): Promise<void> {
+    async verifyNoValidationError(elementName: string, elementType?: string): Promise<void> {
         try {
             const errorElement = await $(`[data-testid="${elementName}-error"], .error-message`);
             const isDisplayed = await errorElement.isDisplayed();
@@ -657,7 +657,7 @@ class UIAssertions {
     /**
      * Verify element is loading
      */
-    async verifyElementLoading(elementName: string): Promise<void> {
+    async verifyElementLoading(elementName: string, elementType?: string): Promise<void> {
         try {
             const element = await $(`[data-testid="${elementName}"], .loading, .spinner`);
             const isDisplayed = await element.isDisplayed();
@@ -673,7 +673,7 @@ class UIAssertions {
     /**
      * Verify element is not loading
      */
-    async verifyElementNotLoading(elementName: string): Promise<void> {
+    async verifyElementNotLoading(elementName: string, elementType?: string): Promise<void> {
         try {
             const element = await $(`[data-testid="${elementName}"], .loading, .spinner`);
             const isDisplayed = await element.isDisplayed();
@@ -750,9 +750,9 @@ class UIAssertions {
     /**
      * Verify element appears within timeout
      */
-    async verifyElementAppearsWithin(elementName: string, timeout: number): Promise<void> {
+    async verifyElementAppearsWithin(elementName: string, timeout: number, elementType?: string): Promise<void> {
         try {
-            const element = await commonUtils.getElement(elementName, 'element');
+            const element = await commonUtils.getElement(elementName, elementType || 'element');
             await element.waitForDisplayed({ timeout: timeout * 1000 });
             console.log(`Successfully verified ${elementName} appeared within ${timeout} seconds`);
         } catch (error) {
@@ -763,9 +763,9 @@ class UIAssertions {
     /**
      * Verify element disappears within timeout
      */
-    async verifyElementDisappearsWithin(elementName: string, timeout: number): Promise<void> {
+    async verifyElementDisappearsWithin(elementName: string, timeout: number, elementType?: string): Promise<void> {
         try {
-            const element = await commonUtils.getElement(elementName, 'element');
+            const element = await commonUtils.getElement(elementName, elementType || 'element');
             await element.waitForDisplayed({ timeout: timeout * 1000, reverse: true });
             console.log(`Successfully verified ${elementName} disappeared within ${timeout} seconds`);
         } catch (error) {
@@ -776,9 +776,9 @@ class UIAssertions {
     /**
      * Verify element background color
      */
-    async verifyElementBackgroundColor(elementName: string, color: string): Promise<void> {
+    async verifyElementBackgroundColor(elementName: string, color: string, elementType?: string): Promise<void> {
         try {
-            const element = await commonUtils.getElement(elementName, 'element');
+            const element = await commonUtils.getElement(elementName, elementType || 'element');
             const backgroundColor = await element.getCSSProperty('background-color');
             const actualColor = backgroundColor.value;
             if (actualColor !== color) {
@@ -793,9 +793,9 @@ class UIAssertions {
     /**
      * Verify element text color
      */
-    async verifyElementTextColor(elementName: string, color: string): Promise<void> {
+    async verifyElementTextColor(elementName: string, color: string, elementType?: string): Promise<void> {
         try {
-            const element = await commonUtils.getElement(elementName, 'element');
+            const element = await commonUtils.getElement(elementName, elementType || 'element');
             const textColor = await element.getCSSProperty('color');
             const actualColor = textColor.value;
             if (actualColor !== color) {
@@ -810,9 +810,9 @@ class UIAssertions {
     /**
      * Verify element position
      */
-    async verifyElementPosition(elementName: string, x: number, y: number): Promise<void> {
+    async verifyElementPosition(elementName: string, x: number, y: number, elementType?: string): Promise<void> {
         try {
-            const element = await commonUtils.getElement(elementName, 'element');
+            const element = await commonUtils.getElement(elementName, elementType || 'element');
             const location = await element.getLocation();
             if (location.x !== x || location.y !== y) {
                 throw new Error(`Element '${elementName}' is positioned at (${location.x},${location.y}) but should be at (${x},${y})`);

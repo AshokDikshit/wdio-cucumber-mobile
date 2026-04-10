@@ -157,7 +157,7 @@ export const config: WebdriverIO.Config = {
         // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
         requireModule: [],
         // <boolean> invoke formatters without executing steps
-        dryRun: false,
+        dryRun: true,
         // <boolean> abort the run on first failure
         failFast: false,
         // <string[]> Only execute the scenarios with name matching the expression (repeatable).

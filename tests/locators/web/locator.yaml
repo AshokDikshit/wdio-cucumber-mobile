@@ -2,9 +2,6 @@ common:
   locator1: "<locator1_value>"
   locator2: "<locator2_value>"
   # SauceDemo specific locators
-  loginButton: "//input[@id='login-button']"
-  username: "//input[@id='user-name']"
-  password: "//input[@id='password']"
   menuButton: "//button[@id='react-burger-menu-btn']"
   inventoryContainer: "//div[@id='inventory_container']"
   addToCartBackpack: "//button[@id='add-to-cart-sauce-labs-backpack']"

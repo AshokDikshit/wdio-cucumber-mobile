@@ -1,0 +1,3 @@
+common:
+  locator1: "<locator1_value>"
+  locator2: "<locator2_value>"

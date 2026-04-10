@@ -1,0 +1,36 @@
+Story
+
+Title: User logs into the banking app
+As a registered user
+I want to log into my account
+So that I can access my banking services
+
+⸻
+
+Acceptance Criteria
+
+Scenario 1: Successful login with valid credentials
+Given the user is on the login page
+When the user enters a valid username and password
+And clicks the “Login” button
+Then the user is redirected to the dashboard
+And the account summary is displayed
+And the user’s name is shown in the header
+
+⸻
+
+Scenario 2: Error message for invalid credentials
+Given the user is on the login page
+When the user enters an invalid username or password
+And clicks the “Login” button
+Then an error message “Invalid credentials” is displayed
+And the user remains on the login page
+And the password field is cleared
+
+⸻
+
+Scenario 3: Mandatory field validation
+Given the user is on the login page
+When the user clicks the “Login” button without entering credentials
+Then validation messages are displayed for required fields
+And the login request is not submitted

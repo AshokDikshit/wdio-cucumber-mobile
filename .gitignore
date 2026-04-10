@@ -5,3 +5,4 @@ package-lock.json
 .vscode
 resolution
 test-results/
+cucumber-html-report

@@ -1,0 +1,22 @@
+common:
+  locator1: "<locator1_value>"
+  locator2: "<locator2_value>"
+  # SauceDemo specific locators
+  menuButton: "//button[@id='react-burger-menu-btn']"
+  inventoryContainer: "//div[@id='inventory_container']"
+  addToCartBackpack: "//button[@id='add-to-cart-sauce-labs-backpack']"
+  shoppingCartBadge: "//span[@class='shopping_cart_badge']"
+  shoppingCartLink: "//a[@class='shopping_cart_link']"
+  cartContents: "//div[@id='cart_contents_container']"
+  # The Internet Herokuapp login page locators
+  usernameField: "//input[@id='username']"
+  passwordField: "//input[@id='password']"
+  loginButton: "//button[@type='submit']"
+  errorMessage: "//div[@id='flash']"
+  # Registration page specific locators (only for elements not identifiable by text)
+  passwordStrengthIndicator: "//div[@class='password-strength-indicator']"
+  errorHighlightClass: "error-highlight"
+  homepageLogo: "//img[@class='logo' or @alt='Company Logo']"
+  emailVerificationContainer: "//div[@class='email-verification-container']"
+  sessionTimeoutError: "//div[@class='session-timeout-error']"
+  accountCreatedMessage: "//div[@class='success-message' and contains(text(), 'Account created')]"

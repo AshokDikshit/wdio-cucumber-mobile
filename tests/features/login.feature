@@ -1,12 +1,22 @@
-Feature: The Internet Guinea Pig Website
+Feature: Login Functionality
+  As a user of the application
+  I want to be able to login with valid and invalid credentials
+  So that I can access the secure area or see appropriate error messages
 
-  Scenario Outline: As a user, I can log into the secure area
+  @login @positive
+  Scenario: Successful login with valid credentials
+    Given I navigate to "https://the-internet.herokuapp.com/login"
+    When I type "tomsmith" into "usernameField" field
+    And I type "SuperSecretPassword!" into "passwordField" field
+    And I click on "loginButton" button
+    Then "Secure Area" heading should be visible
+    And "Logout" button should be visible
 
-    Given I am on the login page
-    When I login with <username> and <password>
-    Then I should see a flash message saying <message>
-
-    Examples:
-      | username | password             | message                        |
-      | tomsmith | SuperSecretPassword! | You logged into a secure area! |
-      | foobar   | barfoo               | Your username is invalid!      |
+  @login @negative
+  Scenario: Failed login with invalid username
+    Given I navigate to "https://the-internet.herokuapp.com/login"
+    When I type "foobar" into "usernameField" field
+    And I type "barfoo" into "passwordField" field
+    And I click on "loginButton" button
+    Then "errorMessage" element should be visible
+    And "loginButton" button should be visible

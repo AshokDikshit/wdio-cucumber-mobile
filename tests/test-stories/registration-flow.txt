@@ -1,0 +1,225 @@
+Sample JIRA Story
+Story ID: RET-2456
+Title: Customer Registration Flow - New User Account Creation
+Story Type: Feature
+Priority: High
+Epic: Customer Onboarding
+ 
+User Story
+As a new customer visiting the retail website
+I want to create an account by providing my personal information
+So that I can make purchases, track orders, and save my preferences
+ 
+Acceptance Criteria
+AC1: Access Registration Page
+•	Given I am on the homepage
+•	When I click on "Sign Up" or "Register" button
+•	Then I should be redirected to the registration page
+•	And I should see a registration form with all required fields
+AC2: Successful Registration with Mandatory Fields
+•	Given I am on the registration page
+•	When I enter valid data in all mandatory fields: 
+o	First Name
+o	Last Name
+o	Email Address
+o	Password
+o	Confirm Password
+o	Mobile Number
+o	Accept Terms & Conditions checkbox
+•	And I click "Create Account" button
+•	Then I should see a success message "Account created successfully"
+•	And I should receive a verification email
+•	And I should be redirected to the email verification page
+AC3: Email Format Validation
+•	Given I am on the registration page
+•	When I enter an invalid email format (e.g., test@, test.com, @test.com)
+•	And I click on another field or submit
+•	Then I should see an error message "Please enter a valid email address"
+•	And the email field should be highlighted in red
+AC4: Password Strength Validation
+•	Given I am on the registration page
+•	When I enter a password in the password field
+•	Then I should see a password strength indicator showing: 
+o	Weak (less than 8 characters)
+o	Medium (8-12 characters with letters and numbers)
+o	Strong (12+ characters with letters, numbers, and special characters)
+•	And the password must meet minimum requirements: 
+o	At least 8 characters
+o	At least one uppercase letter
+o	At least one lowercase letter
+o	At least one number
+o	At least one special character (!@#$%^&*)
+AC5: Password Match Validation
+•	Given I am on the registration page
+•	When I enter password in "Password" field
+•	And I enter a different password in "Confirm Password" field
+•	Then I should see an error message "Passwords do not match"
+•	And the "Create Account" button should remain disabled
+AC6: Duplicate Email Validation
+•	Given I am on the registration page
+•	When I enter an email address that is already registered
+•	And I click "Create Account" button
+•	Then I should see an error message "This email is already registered. Please login or use a different email"
+•	And I should see a "Login" link in the error message
+AC7: Mobile Number Validation
+•	Given I am on the registration page
+•	When I enter mobile number
+•	Then the system should validate: 
+o	UK format: +44 followed by 10 digits (or) 11 digits starting with 0
+o	Only numbers are allowed
+o	Country code dropdown should default to UK (+44)
+•	And invalid formats should show error "Please enter a valid mobile number"
+AC8: Mandatory Field Validation
+•	Given I am on the registration page
+•	When I leave any mandatory field empty
+•	And I click "Create Account" button
+•	Then I should see inline error messages for each empty field: 
+o	"First name is required"
+o	"Last name is required"
+o	"Email is required"
+o	"Password is required"
+o	"Mobile number is required"
+•	And the form should not submit
+AC9: Terms & Conditions Validation
+•	Given I am on the registration page
+•	When I fill all mandatory fields correctly
+•	But I do not check the "Terms & Conditions" checkbox
+•	And I click "Create Account" button
+•	Then I should see an error message "You must accept the Terms & Conditions to proceed"
+•	And the form should not submit
+AC10: Optional Newsletter Subscription
+•	Given I am on the registration page
+•	When I check the "Subscribe to newsletter" checkbox
+•	And I complete the registration
+•	Then my email should be added to the newsletter subscription list
+•	And this should not affect the registration process if unchecked
+AC11: Email Verification Link
+•	Given I have successfully registered
+•	When I check my email inbox
+•	Then I should receive a verification email within 2 minutes
+•	And the email should contain: 
+o	Welcome message with my first name
+o	"Verify Email" button/link
+o	Link expiry notice (valid for 24 hours)
+•	When I click the verification link
+•	Then I should be redirected to login page
+•	And I should see a message "Email verified successfully. Please login."
+AC12: Already Have Account Link
+•	Given I am on the registration page
+•	When I click "Already have an account? Login" link
+•	Then I should be redirected to the login page
+AC13: Special Characters in Name Fields
+•	Given I am on the registration page
+•	When I enter special characters (except hyphen and apostrophe) in name fields
+•	Then I should see an error "Only letters, hyphens, and apostrophes are allowed"
+•	And numbers should also trigger the same error
+AC14: Session Timeout on Registration Page
+•	Given I am on the registration page
+•	When I remain inactive for 15 minutes
+•	And I try to submit the form
+•	Then the form should still submit successfully
+•	And no session timeout error should occur (registration page should not require session)
+AC15: Social Media Registration (Optional)
+•	Given I am on the registration page
+•	When I click "Sign up with Google" or "Sign up with Facebook"
+•	Then I should be redirected to respective OAuth provider
+•	And after authorization, my account should be created automatically
+•	And I should be redirected to the dashboard
+ 
+Business Rules
+1.	Email Uniqueness: Each email can only be registered once in the system
+2.	Age Requirement: Users must be 18+ years old (Date of Birth field if included)
+3.	Password Policy: 
+o	Minimum 8 characters, maximum 128 characters
+o	Must contain: uppercase, lowercase, number, special character
+o	Cannot contain user's email or name
+4.	Mobile Number: UK format validation, optional for registration but required for checkout
+5.	Account Activation: Account is created but requires email verification before first login
+6.	Data Retention: Unverified accounts are deleted after 30 days
+7.	Password Storage: Passwords must be encrypted using bcrypt or similar
+8.	GDPR Compliance: User must explicitly consent to data processing
+ 
+Field Specifications
+Field Name	Type	Max Length	Mandatory	Validation
+First Name	Text	50	Yes	Letters, hyphens, apostrophes only
+Last Name	Text	50	Yes	Letters, hyphens, apostrophes only
+Email	Email	100	Yes	Valid email format, unique
+Password	Password	128	Yes	Min 8 chars, strength requirements
+Confirm Password	Password	128	Yes	Must match password
+Mobile Number	Tel	15	Yes	Valid UK format
+Country Code	Dropdown	-	Yes	Default: +44 (UK)
+Date of Birth	Date	-	No	Must be 18+
+Terms & Conditions	Checkbox	-	Yes	Must be checked
+Newsletter	Checkbox	-	No	Optional
+ 
+Error Messages
+Scenario	Error Message
+Empty First Name	"First name is required"
+Empty Last Name	"Last name is required"
+Empty Email	"Email address is required"
+Invalid Email	"Please enter a valid email address"
+Duplicate Email	"This email is already registered. Please login or use a different email"
+Empty Password	"Password is required"
+Weak Password	"Password must be at least 8 characters with uppercase, lowercase, number, and special character"
+Password Mismatch	"Passwords do not match"
+Empty Mobile	"Mobile number is required"
+Invalid Mobile	"Please enter a valid UK mobile number"
+Terms Not Accepted	"You must accept the Terms & Conditions to proceed"
+Special Chars in Name	"Only letters, hyphens, and apostrophes are allowed"
+Server Error	"Something went wrong. Please try again later"
+ 
+UI/UX Requirements
+1.	Field Focus: First Name field should be auto-focused on page load
+2.	Real-time Validation: Validation should occur on blur for each field
+3.	Password Visibility: Show/hide password toggle icon for password fields
+4.	Progress Indicator: Show loading spinner on "Create Account" button during submission
+5.	Button State: "Create Account" button disabled until all mandatory fields are valid
+6.	Responsive Design: Form should be mobile-friendly and responsive
+7.	Accessibility: All fields should have proper ARIA labels and be keyboard navigable
+8.	Auto-fill Support: Form should support browser auto-fill
+ 
+Test Data
+Valid Test Users:
+•	First Name: John
+•	Last Name: Smith
+•	Email: john.smith.{timestamp}@testemail.com
+•	Password: Test@1234
+•	Mobile: +44 7912345678
+Invalid Email Formats:
+•	test@
+•	@test.com
+•	test.com
+•	test@domain
+Invalid Passwords:
+•	123456 (too short)
+•	password (no uppercase, number, special char)
+•	Password123 (no special char)
+Invalid Mobile Numbers:
+•	12345 (too short)
+•	abcdefghij (contains letters)
+•	+1 1234567890 (wrong country code)
+ 
+API Endpoints (For Backend Testing)
+•	POST /api/v1/auth/register - Create new user account
+•	GET /api/v1/auth/verify-email?token={token} - Verify email
+•	POST /api/v1/auth/check-email - Check if email exists
+ 
+Dependencies
+•	Email Service Integration (SMTP configured)
+•	SMS Gateway (if mobile verification added)
+•	GDPR Consent Management System
+•	OAuth Providers (Google, Facebook) - if social login enabled
+ 
+Non-Functional Requirements
+1.	Performance: Registration should complete within 3 seconds
+2.	Security: HTTPS required, CAPTCHA on production
+3.	Email Delivery: Verification email should be sent within 2 minutes
+4.	Browser Support: Chrome (latest 2), Firefox (latest 2), Safari (latest 2), Edge (latest)
+5.	Concurrent Users: System should handle 1000 concurrent registrations
+ 
+Out of Scope
+•	Password reset functionality (covered in RET-2457)
+•	User profile editing (covered in RET-2458)
+•	Account deletion (covered in RET-2459)
+•	Two-factor authentication (future enhancement)
+

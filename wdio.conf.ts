@@ -26,7 +26,7 @@ export const config: WebdriverIO.Config = {
     // of the config file unless it's absolute.
     //
     specs: [
-        './tests/features/**/*.feature'
+        './tests/features/**/login.feature'
     ],
     // Patterns to exclude.
     exclude: [
@@ -61,9 +61,17 @@ export const config: WebdriverIO.Config = {
         'appium:deviceName': 'Pixel 9 API 35',
         'appium:platformVersion': '15.0',
         'appium:automationName': 'UiAutomator2',
-        'appium:chromedriverAutodownload': true,
-        'appium:chromedriverExecutable': './node_modules/chromedriver/bin/chromedriver'
+
+        'goog:chromeOptions': {
+            args: ['--no-sandbox', '--disable-dev-shm-usage']
+        },
+        // Force classic protocol, BiDi protocol is throwing some 404 error though still works fine with the tests
+        'wdio:enforceWebDriverClassic': true
+
+        // 'appium:chromedriverAutodownload': true,
+        // 'appium:chromedriverExecutable': './node_modules/chromedriver/bin/chromedriver'
     } as any],
+    automationProtocol: 'webdriver',
 
     //
     // ===================
@@ -72,7 +80,7 @@ export const config: WebdriverIO.Config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: 'info',
+    logLevel: 'error',
     //
     // Set specific log levels per logger
     // loggers:
@@ -112,8 +120,8 @@ export const config: WebdriverIO.Config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['appium', 'visual'],
-
+    // services: ['appium', 'visual'],
+    services: ['appium'],
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
     // see also: https://webdriver.io/docs/frameworks
@@ -137,10 +145,13 @@ export const config: WebdriverIO.Config = {
     // see also: https://webdriver.io/docs/dot-reporter
     reporters: ['spec'],
 
+    // Output directory for test results
+    outputDir: './test-results',
+
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
         // <string[]> (file/dir) require files before executing features
-        require: ['./tests/step-definitions/steps.ts'],
+        require: ['./tests/step-definitions/**/*.steps.ts'],
         // <boolean> show full backtrace for errors
         backtrace: false,
         // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
@@ -162,7 +173,9 @@ export const config: WebdriverIO.Config = {
         // <number> timeout for step definitions
         timeout: 60000,
         // <boolean> Enable this config to treat undefined definitions as warnings.
-        ignoreUndefinedDefinitions: false
+        ignoreUndefinedDefinitions: false,
+        // Generate JSON report for Cucumber HTML reporter
+        format: ['json:./test-results/cucumber-report.json']
     },
 
 

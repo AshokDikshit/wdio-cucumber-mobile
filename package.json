@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "wdio": "wdio run ./wdio.conf.ts"
+    "wdio": "wdio run ./wdio.conf.ts",
+    "report": "node generate-cucumber-report.js"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +23,9 @@
     "@wdio/visual-service": "^9.2.1",
     "appium-chromedriver": "^8.2.24",
     "appium-uiautomator2-driver": "^7.1.0",
-    "chromedriver": "^135.0.4",
-    "expect-webdriverio": "^5.6.5"
+    "chromedriver": "^135.0.0",
+    "expect-webdriverio": "^5.6.5",
+    "js-yaml": "^4.1.1",
+    "multiple-cucumber-html-reporter": "^3.7.0"
   }
 }

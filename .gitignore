@@ -1,6 +1,7 @@
 node_modules
-chat_history_export.md
 package-lock.json
 .slingshot
 .vscode
 resolution
+test-results/
+cucumber-html-report

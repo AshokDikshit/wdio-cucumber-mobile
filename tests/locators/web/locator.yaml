@@ -13,3 +13,10 @@ common:
   passwordField: "//input[@id='password']"
   loginButton: "//button[@type='submit']"
   errorMessage: "//div[@id='flash']"
+  # Registration page specific locators (only for elements not identifiable by text)
+  passwordStrengthIndicator: "//div[@class='password-strength-indicator']"
+  errorHighlightClass: "error-highlight"
+  homepageLogo: "//img[@class='logo' or @alt='Company Logo']"
+  emailVerificationContainer: "//div[@class='email-verification-container']"
+  sessionTimeoutError: "//div[@class='session-timeout-error']"
+  accountCreatedMessage: "//div[@class='success-message' and contains(text(), 'Account created')]"

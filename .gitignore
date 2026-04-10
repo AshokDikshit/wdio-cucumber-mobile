@@ -4,3 +4,4 @@ package-lock.json
 .slingshot
 .vscode
 resolution
+test-results/

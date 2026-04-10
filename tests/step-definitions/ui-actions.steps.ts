@@ -10,17 +10,17 @@ import uiActions from '../support/uiActions';
 // ===============================
 // CLICK ACTIONS
 // ===============================
-When(/^I click on "(\w+)" (button|link|element)$/, async (elementName: string, elementType: string) => {
+When(/^I click on "([^"]*)" (button|link|element)$/, async (elementName: string, elementType: string) => {
     console.log(`Clicking on ${elementName} ${elementType}`);
     await uiActions.clickOn(elementName, elementType);
 });
 
-When(/^I double click on "(\w+)" (button|link|element)$/, async (elementName: string, elementType: string) => {
+When(/^I double click on "([^"]*)" (button|link|element)$/, async (elementName: string, elementType: string) => {
     console.log(`Double clicking on ${elementName} ${elementType}`);
     await uiActions.doubleClickOn(elementName, elementType);
 });
 
-When(/^I right click on "(\w+)" (button|link|element)$/, async (elementName: string, elementType: string) => {
+When(/^I right click on "([^"]*)" (button|link|element)$/, async (elementName: string, elementType: string) => {
     console.log(`Right clicking on ${elementName} ${elementType}`);
     await uiActions.rightClickOn(elementName, elementType);
 });
@@ -28,12 +28,12 @@ When(/^I right click on "(\w+)" (button|link|element)$/, async (elementName: str
 // ===============================
 // DROPDOWN AND SELECTION ACTIONS
 // ===============================
-When(/^I select "([^"]*)" from "(\w+)" dropdown$/, async (option: string, elementName: string) => {
+When(/^I select "([^"]*)" from "([^"]*)" dropdown$/, async (option: string, elementName: string) => {
     console.log(`Selecting "${option}" from ${elementName} dropdown`);
     await uiActions.selectFromDropdown(elementName, option);
 });
 
-When(/^I select "(\w+)" option from "(\w+)" dropdown$/, async (option: string, elementName: string) => {
+When(/^I select "([^"]*)" option from "([^"]*)" dropdown$/, async (option: string, elementName: string) => {
     console.log(`Selecting ${option} option from ${elementName} dropdown`);
     await uiActions.selectFromDropdown(elementName, option);
 });
@@ -41,12 +41,12 @@ When(/^I select "(\w+)" option from "(\w+)" dropdown$/, async (option: string, e
 // ===============================
 // HOVER AND FOCUS ACTIONS
 // ===============================
-When(/^I hover over "(\w+)" (button|link|element)$/, async (elementName: string, elementType: string) => {
+When(/^I hover over "([^"]*)" (button|link|element)$/, async (elementName: string, elementType: string) => {
     console.log(`Hovering over ${elementName} ${elementType}`);
     await uiActions.hoverOn(elementName, elementType);
 });
 
-When(/^I focus on "(\w+)" (field|input|element)$/, async (elementName: string, elementType: string) => {
+When(/^I focus on "([^"]*)" (field|input|element)$/, async (elementName: string, elementType: string) => {
     console.log(`Focusing on ${elementName} ${elementType}`);
     await uiActions.focusOn(elementName, elementType);
 });
@@ -54,27 +54,27 @@ When(/^I focus on "(\w+)" (field|input|element)$/, async (elementName: string, e
 // ===============================
 // SCROLL ACTIONS
 // ===============================
-When(/^I scroll to "(\w+)" (element|section)$/, async (elementName: string, elementType: string) => {
+When(/^I scroll to "([^"]*)" (element|section)$/, async (elementName: string, elementType: string) => {
     console.log(`Scrolling to ${elementName} ${elementType}`);
     await uiActions.scrollTo(elementName, elementType);
 });
 
-When(/^I scroll to "(\w+)" and click$/, async (elementName: string) => {
+When(/^I scroll to "([^"]*)" and click$/, async (elementName: string) => {
     console.log(`Scrolling to ${elementName} and clicking`);
     await uiActions.scrollToAndClick(elementName);
 });
 
-When(/^I scroll to "(\w+)" and double click$/, async (elementName: string) => {
+When(/^I scroll to "([^"]*)" and double click$/, async (elementName: string) => {
     console.log(`Scrolling to ${elementName} and double clicking`);
     await uiActions.scrollToAndDoubleClick(elementName);
 });
 
-When(/^I scroll to "(\w+)" and right click$/, async (elementName: string) => {
+When(/^I scroll to "([^"]*)" and right click$/, async (elementName: string) => {
     console.log(`Scrolling to ${elementName} and right clicking`);
     await uiActions.scrollToAndRightClick(elementName);
 });
 
-When(/^I scroll (left|right|up|down) to "(\w+)" and click on "(\w+)"$/, async (direction: string, targetElement: string, clickElement: string) => {
+When(/^I scroll (left|right|up|down) to "([^"]*)" and click on "([^"]*)"$/, async (direction: string, targetElement: string, clickElement: string) => {
     console.log(`Scrolling ${direction} to ${targetElement} and clicking on ${clickElement}`);
     await uiActions.scrollDirectionToAndClick(direction, targetElement, clickElement);
 });
@@ -87,64 +87,64 @@ When(/^I scroll (left|right|up|down) by (\d+) pixels$/, async (direction: string
 // ===============================
 // TOUCH AND GESTURE ACTIONS (Mobile)
 // ===============================
-When(/^I press and hold "(\w+)" (element|button)$/, async (elementName: string, elementType: string) => {
+When(/^I press and hold "([^"]*)" (element|button)$/, async (elementName: string, elementType: string) => {
     console.log(`Pressing and holding ${elementName} ${elementType}`);
     await uiActions.pressAndHold(elementName, elementType);
 });
 
-When(/^I release the hold on "(\w+)" (element|button)$/, async (elementName: string, elementType: string) => {
+When(/^I release the hold on "([^"]*)" (element|button)$/, async (elementName: string, elementType: string) => {
     console.log(`Releasing hold on ${elementName} ${elementType}`);
     await uiActions.releaseHold(elementName, elementType);
 });
 
-When(/^I long press on "(\w+)" (element|button)$/, async (elementName: string, elementType: string) => {
+When(/^I long press on "([^"]*)" (element|button)$/, async (elementName: string, elementType: string) => {
     console.log(`Long pressing on ${elementName} ${elementType}`);
     await uiActions.longPress(elementName, elementType);
 });
 
-When(/^I swipe from "(\w+)" to "(\w+)"$/, async (fromElement: string, toElement: string) => {
+When(/^I swipe from "([^"]*)" to "([^"]*)"$/, async (fromElement: string, toElement: string) => {
     console.log(`Swiping from ${fromElement} to ${toElement}`);
     await uiActions.swipeFromTo(fromElement, toElement);
 });
 
-When(/^I swipe (left|right|up|down) on "(\w+)"$/, async (direction: string, elementName: string) => {
+When(/^I swipe (left|right|up|down) on "([^"]*)"$/, async (direction: string, elementName: string) => {
     console.log(`Swiping ${direction} on ${elementName}`);
     await uiActions.swipeDirection(direction, elementName);
 });
 
-When(/^I pinch in on "(\w+)"$/, async (elementName: string) => {
+When(/^I pinch in on "([^"]*)"$/, async (elementName: string) => {
     console.log(`Pinching in on ${elementName}`);
     await uiActions.pinchIn(elementName);
 });
 
-When(/^I pinch out on "(\w+)"$/, async (elementName: string) => {
+When(/^I pinch out on "([^"]*)"$/, async (elementName: string) => {
     console.log(`Pinching out on ${elementName}`);
     await uiActions.pinchOut(elementName);
 });
 
-When(/^I zoom in on "(\w+)"$/, async (elementName: string) => {
+When(/^I zoom in on "([^"]*)"$/, async (elementName: string) => {
     console.log(`Zooming in on ${elementName}`);
     await uiActions.zoomIn(elementName);
 });
 
-When(/^I zoom out on "(\w+)"$/, async (elementName: string) => {
+When(/^I zoom out on "([^"]*)"$/, async (elementName: string) => {
     console.log(`Zooming out on ${elementName}`);
     await uiActions.zoomOut(elementName);
 });
 // ===============================
 // TEXT INPUT ACTIONS
 // ===============================
-When(/^I (type|enter) "([^"]*)" into "(\w+)" (field|input|textbox)$/, async (action: string, text: string, elementName: string, elementType: string) => {
+When(/^I (type|enter) "([^"]*)" into "([^"]*)" (field|input|textbox)$/, async (action: string, text: string, elementName: string, elementType: string) => {
     console.log(`Typing/Entering "${text}" into ${elementName} ${elementType}`);
     await uiActions.typeText(text, elementName, elementType);
 });
 
-When(/^I clear "(\w+)" (field|input|textbox)$/, async (elementName: string, elementType: string) => {
+When(/^I clear "([^"]*)" (field|input|textbox)$/, async (elementName: string, elementType: string) => {
     console.log(`Clearing ${elementName} ${elementType}`);
     await uiActions.clearField(elementName, elementType);
 });
 
-When(/^I select all text in "(\w+)" (field|input|textbox)$/, async (elementName: string, elementType: string) => {
+When(/^I select all text in "([^"]*)" (field|input|textbox)$/, async (elementName: string, elementType: string) => {
     console.log(`Selecting all text in ${elementName} ${elementType}`);
     await uiActions.selectAllText(elementName, elementType);
 });
@@ -152,17 +152,17 @@ When(/^I select all text in "(\w+)" (field|input|textbox)$/, async (elementName:
 // ===============================
 // CHECKBOX AND RADIO ACTIONS
 // ===============================
-When(/^I check "(\w+)" checkbox$/, async (elementName: string) => {
+When(/^I check "([^"]*)" checkbox$/, async (elementName: string) => {
     console.log(`Checking ${elementName} checkbox`);
     await uiActions.checkCheckbox(elementName);
 });
 
-When(/^I uncheck "(\w+)" checkbox$/, async (elementName: string) => {
+When(/^I uncheck "([^"]*)" checkbox$/, async (elementName: string) => {
     console.log(`Unchecking ${elementName} checkbox`);
     await uiActions.uncheckCheckbox(elementName);
 });
 
-When(/^I select "(\w+)" radio button$/, async (elementName: string) => {
+When(/^I select "([^"]*)" radio button$/, async (elementName: string) => {
     console.log(`Selecting ${elementName} radio button`);
     await uiActions.selectRadioButton(elementName);
 });
@@ -172,7 +172,7 @@ When(/^I select "(\w+)" radio button$/, async (elementName: string) => {
 // ===============================
 // NAVIGATION ACTIONS
 // ===============================
-When(/^I navigate to "([^"]*)"$/, async (url: string) => {
+Given(/^I navigate to "([^"]*)"$/, async (url: string) => {
     console.log(`Navigating to "${url}"`);
     await uiActions.navigateTo(url);
 });
@@ -217,22 +217,22 @@ When(/^I close current tab$/, async () => {
 // ===============================
 // WAIT ACTIONS
 // ===============================
-When(/^I wait for "(\w+)" to be visible$/, async (elementName: string) => {
+When(/^I wait for "([^"]*)" to be visible$/, async (elementName: string) => {
     console.log(`Waiting for ${elementName} to be visible`);
     await uiActions.waitForVisible(elementName);
 });
 
-When(/^I wait for "(\w+)" to disappear$/, async (elementName: string) => {
+When(/^I wait for "([^"]*)" to disappear$/, async (elementName: string) => {
     console.log(`Waiting for ${elementName} to disappear`);
     await uiActions.waitForDisappear(elementName);
 });
 
-When(/^I wait for "(\w+)" to be enabled$/, async (elementName: string) => {
+When(/^I wait for "([^"]*)" to be enabled$/, async (elementName: string) => {
     console.log(`Waiting for ${elementName} to be enabled`);
     await uiActions.waitForEnabled(elementName);
 });
 
-When(/^I wait for "(\w+)" to be clickable$/, async (elementName: string) => {
+When(/^I wait for "([^"]*)" to be clickable$/, async (elementName: string) => {
     console.log(`Waiting for ${elementName} to be clickable`);
     await uiActions.waitForClickable(elementName);
 });
@@ -250,7 +250,7 @@ When('I wait for page to load', async () => {
 // ===============================
 // FILE UPLOAD ACTIONS
 // ===============================
-When(/^I upload file "([^"]*)" to "(\w+)"$/, async (filePath: string, elementName: string) => {
+When(/^I upload file "([^"]*)" to "([^"]*)"$/, async (filePath: string, elementName: string) => {
     console.log(`Uploading file "${filePath}" to ${elementName}`);
     await uiActions.uploadFile(filePath, elementName);
 });
@@ -378,12 +378,12 @@ When(/^I press key combination "([^"]*)"$/, async (keys: string) => {
 // ===============================
 // DRAG AND DROP ACTIONS
 // ===============================
-When(/^I drag "(\w+)" to "(\w+)"$/, async (sourceElement: string, targetElement: string) => {
+When(/^I drag "([^"]*)" to "([^"]*)"$/, async (sourceElement: string, targetElement: string) => {
     console.log(`Dragging ${sourceElement} to ${targetElement}`);
     await uiActions.dragToElement(sourceElement, targetElement);
 });
 
-When(/^I drag "(\w+)" by offset \((\d+),(\d+)\)$/, async (elementName: string, x: string, y: string) => {
+When(/^I drag "([^"]*)" by offset \((\d+),(\d+)\)$/, async (elementName: string, x: string, y: string) => {
     console.log(`Dragging ${elementName} by offset (${x},${y})`);
     await uiActions.dragByOffset(elementName, x, y);
 });

@@ -140,31 +140,3 @@ Then(/^no session timeout error should be displayed$/, async () => {
     await uiAssertions.verifyElementNotVisible('Session Timeout', 'element');
     await uiAssertions.verifyElementNotVisible('Session Expired', 'element');
 });
-
-// ===============================
-// UTILITY STEPS
-// ===============================
-When(/^I wait (\d+) seconds$/, async (seconds: string) => {
-    console.log(`Waiting ${seconds} seconds`);
-    await uiActions.waitSeconds(seconds);
-});
-
-// ===============================
-// PLACEHOLDER STEPS FOR COMPLEX SCENARIOS
-// ===============================
-// These steps might need custom implementation based on the actual application
-
-Then(/^"([^"]*)" element should be visible$/, async (elementName: string) => {
-    console.log(`Verifying ${elementName} element should be visible`);
-    await uiAssertions.verifyElementVisible(elementName, 'element');
-});
-
-Then(/^"([^"]*)" link should be visible$/, async (linkName: string) => {
-    console.log(`Verifying ${linkName} link should be visible`);
-    await uiAssertions.verifyElementVisible(linkName, 'link');
-});
-
-Then(/^"([^"]*)" heading should be visible$/, async (headingName: string) => {
-    console.log(`Verifying ${headingName} heading should be visible`);
-    await uiAssertions.verifyElementVisible(headingName, 'heading');
-});

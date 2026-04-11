@@ -24,7 +24,7 @@ export const config: WebdriverIO.Config = {
     // of the config file unless it's absolute.
     //
     specs: [
-        './tests/features/**/login.feature'
+        './tests/features/**/saucedemo-smoke.feature'
     ],
     // Patterns to exclude.
     exclude: [
@@ -78,7 +78,7 @@ export const config: WebdriverIO.Config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: 'error',
+    logLevel: 'info',
     //
     // Set specific log levels per logger
     // loggers:

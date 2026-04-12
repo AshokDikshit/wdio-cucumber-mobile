@@ -795,13 +795,13 @@ class UIActions {
      * Wait for element to be visible
      * @param elementName - Name of the element
      */
-    async waitForVisible(elementName: string): Promise<void> {
+    async waitForVisible(elementName: string, elementType: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType);
             await element.waitForDisplayed({ timeout: 10000 });
-            console.log(`Successfully waited for ${elementName} to be visible`);
+            console.log(`Successfully waited for ${elementName} ${elementType} to be visible`);
         } catch (error) {
-            throw new Error(`Failed to wait for ${elementName} to be visible: ${error}`);
+            throw new Error(`Failed to wait for ${elementName} ${elementType} to be visible: ${error}`);
         }
     }
 
@@ -809,13 +809,13 @@ class UIActions {
      * Wait for element to disappear
      * @param elementName - Name of the element
      */
-    async waitForDisappear(elementName: string): Promise<void> {
+    async waitForDisappear(elementName: string, elementType: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType);
             await element.waitForDisplayed({ timeout: 10000, reverse: true });
-            console.log(`Successfully waited for ${elementName} to disappear`);
+            console.log(`Successfully waited for ${elementName} ${elementType} to disappear`);
         } catch (error) {
-            throw new Error(`Failed to wait for ${elementName} to disappear: ${error}`);
+            throw new Error(`Failed to wait for ${elementName} ${elementType} to disappear: ${error}`);
         }
     }
 
@@ -823,13 +823,13 @@ class UIActions {
      * Wait for element to be enabled
      * @param elementName - Name of the element
      */
-    async waitForEnabled(elementName: string): Promise<void> {
+    async waitForEnabled(elementName: string, elementType: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType);
             await element.waitForEnabled({ timeout: 10000 });
-            console.log(`Successfully waited for ${elementName} to be enabled`);
+            console.log(`Successfully waited for ${elementName} ${elementType} to be enabled`);
         } catch (error) {
-            throw new Error(`Failed to wait for ${elementName} to be enabled: ${error}`);
+            throw new Error(`Failed to wait for ${elementName} ${elementType} to be enabled: ${error}`);
         }
     }
 
@@ -837,11 +837,11 @@ class UIActions {
      * Wait for element to be clickable
      * @param elementName - Name of the element
      */
-    async waitForClickable(elementName: string): Promise<void> {
+    async waitForClickable(elementName: string, elementType: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType);
             await element.waitForClickable({ timeout: 10000 });
-            console.log(`Successfully waited for ${elementName} to be clickable`);
+            console.log(`Successfully waited for ${elementName} ${elementType} to be clickable`);
         } catch (error) {
             throw new Error(`Failed to wait for ${elementName} to be clickable: ${error}`);
         }
@@ -851,7 +851,7 @@ class UIActions {
      * Wait for specified number of seconds
      * @param seconds - Number of seconds to wait
      */
-    async waitSeconds(seconds: string): Promise<void> {
+    async waitSeconds(seconds: any): Promise<void> {
         try {
             const ms = parseInt(seconds) * 1000;
             await commonUtils.pause(ms);

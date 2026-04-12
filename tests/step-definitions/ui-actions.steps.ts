@@ -217,24 +217,25 @@ When(/^I close current tab$/, async () => {
 // ===============================
 // WAIT ACTIONS
 // ===============================
-When(/^I wait for "([^"]*)" to be visible$/, async (elementName: string) => {
-    console.log(`Waiting for ${elementName} to be visible`);
-    await uiActions.waitForVisible(elementName);
+When(/^I wait for "([^"]*)" (button|link|element) to be visible$/, async (elementName: string, elementType: string) => {
+    console.log(`Waiting for ${elementName} ${elementType}  to be visible`);
+    await uiActions.waitSeconds(5); // Short wait to ensure any animations have started
+    await uiActions.waitForVisible(elementName, elementType);
 });
 
-When(/^I wait for "([^"]*)" to disappear$/, async (elementName: string) => {
-    console.log(`Waiting for ${elementName} to disappear`);
-    await uiActions.waitForDisappear(elementName);
+When(/^I wait for "([^"]*)" (button|link|element) to disappear$/, async (elementName: string, elementType: string) => {
+    console.log(`Waiting for ${elementName} ${elementType} to disappear`);
+    await uiActions.waitForDisappear(elementName, elementType);
 });
 
-When(/^I wait for "([^"]*)" to be enabled$/, async (elementName: string) => {
-    console.log(`Waiting for ${elementName} to be enabled`);
-    await uiActions.waitForEnabled(elementName);
+When(/^I wait for "([^"]*)" (button|link|element) to be enabled$/, async (elementName: string, elementType: string) => {
+    console.log(`Waiting for ${elementName} ${elementType} to be enabled`);
+    await uiActions.waitForEnabled(elementName, elementType);
 });
 
-When(/^I wait for "([^"]*)" to be clickable$/, async (elementName: string) => {
-    console.log(`Waiting for ${elementName} to be clickable`);
-    await uiActions.waitForClickable(elementName);
+When(/^I wait for "([^"]*)" (button|link|element) to be clickable$/, async (elementName: string, elementType: string) => {
+    console.log(`Waiting for ${elementName} ${elementType} to be clickable`);
+    await uiActions.waitForClickable(elementName, elementType  );
 });
 
 When(/^I wait (\d+) seconds$/, async (seconds: string) => {

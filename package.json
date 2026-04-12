@@ -23,7 +23,7 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@types/node": "^25.5.2",
+    "@types/node": "^25.6.0",
     "@wdio/appium-service": "^9.27.0",
     "@wdio/cli": "^9.27.0",
     "@wdio/cucumber-framework": "^9.27.0",

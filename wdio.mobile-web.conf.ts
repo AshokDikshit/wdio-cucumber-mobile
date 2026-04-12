@@ -48,56 +48,56 @@ export const config: WebdriverIO.Config = mergeConfigs(sharedConfig, {
             //     ]
             // }
         } as any,
-        // Android Chrome - Real Device
-        {
-            platformName: 'Android',
-            'appium:platformVersion': '13.0', // Update based on your device
-            'appium:deviceName': 'Real Android Device',
-            'appium:automationName': 'UiAutomator2',
-            browserName: 'Chrome',
-            'appium:chromedriverExecutable': './node_modules/chromedriver/lib/chromedriver/chromedriver',
-            'appium:newCommandTimeout': 240,
-            'appium:udid': process.env.ANDROID_UDID || 'auto', // Set device UDID in environment
-            'appium:chromeOptions': {
-                w3c: false,
-                args: [
-                    '--disable-web-security',
-                    '--disable-features=VizDisplayCompositor'
-                ]
-            }
-        } as any,
-        // iOS Safari - Simulator
-        {
-            platformName: 'iOS',
-            'appium:platformVersion': '17.0',
-            'appium:deviceName': 'iPhone 15',
-            'appium:automationName': 'XCUITest',
-            browserName: 'Safari',
-            'appium:newCommandTimeout': 240,
-            'appium:wdaLaunchTimeout': 300000,
-            'appium:wdaConnectionTimeout': 240000,
-            'appium:safariInitialUrl': 'about:blank',
-            'appium:safariAllowPopups': true,
-            'appium:safariIgnoreFraudWarning': true
+        // // Android Chrome - Real Device
+        // {
+        //     platformName: 'Android',
+        //     'appium:platformVersion': '13.0', // Update based on your device
+        //     'appium:deviceName': 'Real Android Device',
+        //     'appium:automationName': 'UiAutomator2',
+        //     browserName: 'Chrome',
+        //     'appium:chromedriverExecutable': './node_modules/chromedriver/lib/chromedriver/chromedriver',
+        //     'appium:newCommandTimeout': 240,
+        //     'appium:udid': process.env.ANDROID_UDID || 'auto', // Set device UDID in environment
+        //     'appium:chromeOptions': {
+        //         w3c: false,
+        //         args: [
+        //             '--disable-web-security',
+        //             '--disable-features=VizDisplayCompositor'
+        //         ]
+        //     }
+        // } as any,
+        // // iOS Safari - Simulator
+        // {
+        //     platformName: 'iOS',
+        //     'appium:platformVersion': '17.0',
+        //     'appium:deviceName': 'iPhone 15',
+        //     'appium:automationName': 'XCUITest',
+        //     browserName: 'Safari',
+        //     'appium:newCommandTimeout': 240,
+        //     'appium:wdaLaunchTimeout': 300000,
+        //     'appium:wdaConnectionTimeout': 240000,
+        //     'appium:safariInitialUrl': 'about:blank',
+        //     'appium:safariAllowPopups': true,
+        //     'appium:safariIgnoreFraudWarning': true
 
-        } as any,
-        // iOS Safari - Real Device
-        {
-            platformName: 'iOS',
-            'appium:platformVersion': '17.0', // Update based on your device
-            'appium:deviceName': 'Real iPhone',
-            'appium:automationName': 'XCUITest',
-            browserName: 'Safari',
-            'appium:newCommandTimeout': 240,
-            'appium:udid': process.env.IOS_UDID || 'auto', // Set device UDID in environment
-            'appium:xcodeOrgId': process.env.XCODE_ORG_ID, // Required for real device
-            'appium:xcodeSigningId': process.env.XCODE_SIGNING_ID, // Required for real device
-            'appium:wdaLaunchTimeout': 300000,
-            'appium:wdaConnectionTimeout': 240000,
-            'appium:safariInitialUrl': 'about:blank',
-            'appium:safariAllowPopups': true,
-            'appium:safariIgnoreFraudWarning': true
-        } as any
+        // } as any,
+        // // iOS Safari - Real Device
+        // {
+        //     platformName: 'iOS',
+        //     'appium:platformVersion': '17.0', // Update based on your device
+        //     'appium:deviceName': 'Real iPhone',
+        //     'appium:automationName': 'XCUITest',
+        //     browserName: 'Safari',
+        //     'appium:newCommandTimeout': 240,
+        //     'appium:udid': process.env.IOS_UDID || 'auto', // Set device UDID in environment
+        //     'appium:xcodeOrgId': process.env.XCODE_ORG_ID, // Required for real device
+        //     'appium:xcodeSigningId': process.env.XCODE_SIGNING_ID, // Required for real device
+        //     'appium:wdaLaunchTimeout': 300000,
+        //     'appium:wdaConnectionTimeout': 240000,
+        //     'appium:safariInitialUrl': 'about:blank',
+        //     'appium:safariAllowPopups': true,
+        //     'appium:safariIgnoreFraudWarning': true
+        // } as any
     ],
     // // Set a base URL for convenient URL navigation
     // baseUrl: process.env.BASE_URL || 'https://www.saucedemo.com',

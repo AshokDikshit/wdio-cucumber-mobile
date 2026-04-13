@@ -1,7 +1,7 @@
 common:
   # Non-text-based locators for General Store app
   # Only elements that cannot be identified by text, placeholder, or associated label
-  
+  "Let's Shop": "//android.widget.Button[@resource-id='com.androidsample.generalstore:id/btnLetsShop']"
   countrySpinner: "//android.widget.Spinner[@resource-id='com.androidsample.generalstore:id/spinnerCountry']"
   nameField: "//android.widget.EditText[@resource-id='com.androidsample.generalstore:id/nameField']"
   maleRadio: "//android.widget.RadioButton[@resource-id='com.androidsample.generalstore:id/radioMale']"

@@ -8,10 +8,10 @@ export const sharedConfig: Partial<WebdriverIO.Config> = {
     tsConfigPath: './tsconfig.json',
 
     // Test Configuration
-    logLevel: 'info',
+    logLevel: 'error',
     logLevels: {
-        webdriver: 'info',
-        '@wdio/appium-service': 'info'
+        webdriver: 'error',
+        '@wdio/appium-service': 'error'
     },
 
     // Retry and Timeout Configuration

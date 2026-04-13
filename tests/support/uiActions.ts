@@ -53,9 +53,9 @@ class UIActions {
      * @param state - State to wait for (visible, clickable, enabled)
      */
     private async waitForElementState(element: ChainablePromiseElement, state: 'visible' | 'clickable' | 'enabled'): Promise<void> {
-        const appType = 'web'; // This can be dynamically determined based on test context
-        if(appType === 'web') {
-        return await commonUtils.waitForElementState(element, state);
+        const appType = await commonUtils.getApplicationType(); // Dynamically determined based on test context
+        if(await commonUtils.isWebApplication()) {
+            await commonUtils.waitForElementState(element, state);
         } else {
             //For native waitForElementState is not applicable
         }

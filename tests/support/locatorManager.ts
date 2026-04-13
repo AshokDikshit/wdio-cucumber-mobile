@@ -37,9 +37,10 @@ class LocatorManager {
   private locatorConfig: LocatorConfig;
   private defaultTimeout: number = 10000;
   private defaultRetryCount: number = 3;
+  private appType = (global as any).appType || 'web'; // Default to 'web' if not set
 
   constructor() {
-    this.locatorFilePath = path.join(process.cwd(), 'tests', 'locators', 'native', 'locator.yaml');
+    this.locatorFilePath = path.join(process.cwd(), 'tests', 'locators', this.appType, 'locator.yaml');
     this.locatorConfig = this.loadLocatorConfig();
   }
 
@@ -56,7 +57,7 @@ class LocatorManager {
       if (!fs.existsSync(this.locatorFilePath)) {
         this.createDefaultLocatorFile();
       }
-      
+
       const fileContent = fs.readFileSync(this.locatorFilePath, 'utf8');
       const config = yaml.load(fileContent) as LocatorConfig;
       return config || { common: {} };
@@ -76,13 +77,13 @@ class LocatorManager {
         lineWidth: -1,
         noRefs: true
       });
-      
+
       // Ensure directory exists
       const dir = path.dirname(this.locatorFilePath);
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
       }
-      
+
       fs.writeFileSync(this.locatorFilePath, yamlContent, 'utf8');
       console.log(`Locator configuration saved to: ${this.locatorFilePath}`);
     } catch (error) {
@@ -100,7 +101,7 @@ class LocatorManager {
         locator2: '<locator2_value>'
       }
     };
-    
+
     this.locatorConfig = defaultConfig;
     this.saveLocatorConfig();
   }
@@ -116,10 +117,10 @@ class LocatorManager {
       if (!this.locatorConfig[category]) {
         this.locatorConfig[category] = {};
       }
-      
+
       this.locatorConfig[category][locatorName] = locatorValue;
       this.saveLocatorConfig();
-      
+
       console.log(`Added custom locator '${locatorName}' to category '${category}': ${locatorValue}`);
     } catch (error) {
       throw new Error(`Failed to add custom locator: ${error}`);
@@ -151,32 +152,16 @@ class LocatorManager {
    * @param elementType - Type of element (button, link, etc.)
    * @returns CSS selector string
    */
-  private createTextBasedLocator(text: string, elementType?: string): string {
-    // const escapedText = text.replace(/'/g, "\\'").replace(/"/g, '\\"');
+  private async createTextBasedLocator(text: string, elementType?: string): Promise<string> {
+    // const escapedText = text.replace(/'/g, "\\'').replace(/"/g, '\\"');
     const escapedText = text;
-    
-    // if (elementType) {
-    //   switch (elementType.toLowerCase()) {
-    //     case 'button':
-    //       return `//*[contains(text(),'${escapedText}')] | //button[contains(text(),'${escapedText}')] | //*[@role='button'][contains(text(),'${escapedText}')] | //input[@type='button' and contains(@value,'${escapedText}')] | //input[@type='submit' and contains(@value,'${escapedText}')]`;
-    //     case 'input':
-    //       return `//input[@type='text' and contains(@placeholder,'${escapedText}')] | //input[@type='secure' and contains(@placeholder,'${escapedText}')] | //input[@type='password' and contains(@placeholder,'${escapedText}')]`;
-    //     case 'field':
-    //       return `//input[@type='text' and contains(@placeholder,'${escapedText}')] | //input[@type='secure' and contains(@placeholder,'${escapedText}')] | //input[@type='password' and contains(@placeholder,'${escapedText}')]`;
-    //     case 'link':
-    //       return `//a[contains(text(),'${escapedText}')] | //*[@role='link'][contains(text(),'${escapedText}')]`;
-    //     case 'label':
-    //       return `//label[contains(text(),'${escapedText}')]`;
-    //     case 'heading':
-    //       return `//h1[contains(text(),'${escapedText}')] | //h2[contains(text(),'${escapedText}')] | //h3[contains(text(),'${escapedText}')] | //h4[contains(text(),'${escapedText}')] | //h5[contains(text(),'${escapedText}')] | //h6[contains(text(),'${escapedText}')]`;
-    //     default:
-    //       return `//*[contains(text(),'${escapedText}')]`;
-    //   }
-    // }
-    
-    // Generic text-based selector with priority order using XPath
-    return `//*[contains(@text,'${escapedText}')]`;
-    //  | //*[@role='button'][contains(text(),'${escapedText}')] | //a[contains(text(),'${escapedText}')] | //*[@role='link'][contains(text(),'${escapedText}')] | //*[contains(text(),'${escapedText}')]`;
+    if (this.appType === 'web' || this.appType === 'hybrid') {
+      // Generic text-based selector proven for web but seems or operator does not work incase of native
+      return `//*[contains(@text,'${escapedText}')] | //*[contains(text(),'${escapedText}')] | //*[contains(@placeholder,'${escapedText}')] | //*[contains(@title,'${escapedText}')] | //*[contains(@name,'${escapedText}')] | //*[contains(@content-desc,'${escapedText}')] | //*[contains(@value,'${escapedText}')] | //*[contains(@label,'${escapedText}')] | //*[contains(@description,'${escapedText}')] | //*[contains(@data-test-id,'${escapedText}')] | //*[contains(@data-test,'${escapedText}')] | //*[contains(@data-testid,'${escapedText}')]`;
+    } else {
+      //For native applications
+      return `//*[contains(@text,'${escapedText}')]`;
+    }
   }
 
   /**
@@ -187,18 +172,18 @@ class LocatorManager {
    * @returns WebDriverIO element
    */
   async getSelector(
-    identifier: string, 
-    elementType?: string, 
+    identifier: string,
+    elementType?: string,
     options: ElementActionOptions = {}
   ): Promise<string> {
     const { timeout = this.defaultTimeout, waitForState = 'visible', retryCount = this.defaultRetryCount } = options;
-    
+
     let lastError: Error | null = null;
-    
+
     for (let attempt = 1; attempt <= retryCount; attempt++) {
       try {
         let selector: string;
-        
+
         // First, try to get selector using saved locator
         const savedLocator = this.getLocator(identifier, 'common');
         if (savedLocator) {
@@ -209,121 +194,25 @@ class LocatorManager {
         } else {
           // Create dynamic text-based locator
           console.log(`Creating dynamic text-based locator for '${identifier}'`);
-          const textLocator = this.createTextBasedLocator(identifier, elementType);
+          const textLocator = await this.createTextBasedLocator(identifier, elementType);
           // Use XPath selector for text-based locators
           selector = textLocator;
           console.log(`Got text-based locator '${selector}' on attempt ${attempt}`);
           // element = await $(textLocator);
         }
         return selector;
-        
+
       } catch (error) {
         lastError = error as Error;
         console.warn(`Attempt ${attempt}/${retryCount} failed to locate element '${identifier}': ${error}`);
-        
+
         if (attempt < retryCount) {
           await browser.pause(1000); // Wait 1 second before retry
         }
       }
     }
-    
+
     throw new Error(`Failed to locate element '${identifier}' after ${retryCount} attempts. Last error: ${lastError?.message}`);
-  }
-
-  /**
-   * Get Android element selector using dynamic locator strategy
-   * @param identifier - Text content or locator name
-   * @param elementType - Type of Android element (optional)
-   * @param options - Additional options for element location
-   * @returns Android UI Automator selector string
-   */
-  async getAndroidSelector(
-    identifier: string, 
-    elementType?: string, 
-    options: ElementActionOptions = {}
-  ): Promise<string> {
-    const { timeout = this.defaultTimeout, waitForState = 'visible', retryCount = this.defaultRetryCount } = options;
-    
-    let lastError: Error | null = null;
-    
-    for (let attempt = 1; attempt <= retryCount; attempt++) {
-      try {
-        let selector: string;
-        
-        // First, try to get selector using saved locator
-        const savedLocator = this.getLocator(identifier, 'android');
-        if (savedLocator) {
-          console.log(`Using saved Android locator for '${identifier}': ${savedLocator}`);
-          selector = savedLocator;
-        } else {
-          // Create dynamic text-based Android locator
-          console.log(`Creating dynamic text-based Android locator for '${identifier}'`);
-          const androidLocator = this.createTextBasedAndroidLocator(identifier, elementType);
-          selector = androidLocator;
-        }
-        
-        console.log(`Successfully created Android selector for element '${identifier}' on attempt ${attempt}`);
-        return selector;
-        
-      } catch (error) {
-        lastError = error as Error;
-        console.warn(`Attempt ${attempt}/${retryCount} failed to create Android selector for element '${identifier}': ${error}`);
-        
-        if (attempt < retryCount) {
-          await browser.pause(1000); // Wait 1 second before retry
-        }
-      }
-    }
-    
-    throw new Error(`Failed to create Android selector for element '${identifier}' after ${retryCount} attempts. Last error: ${lastError?.message}`);
-  }
-
-  /**
-   * Get iOS element selector using dynamic locator strategy
-   * @param identifier - Text content or locator name
-   * @param elementType - Type of iOS element (optional)
-   * @param options - Additional options for element location
-   * @returns iOS predicate string or class chain selector
-   */
-  async getiOSSelector(
-    identifier: string, 
-    elementType?: string, 
-    options: ElementActionOptions = {}
-  ): Promise<string> {
-    const { timeout = this.defaultTimeout, waitForState = 'visible', retryCount = this.defaultRetryCount } = options;
-    
-    let lastError: Error | null = null;
-    
-    for (let attempt = 1; attempt <= retryCount; attempt++) {
-      try {
-        let selector: string;
-        
-        // First, try to get selector using saved locator
-        const savedLocator = this.getLocator(identifier, 'ios');
-        if (savedLocator) {
-          console.log(`Using saved iOS locator for '${identifier}': ${savedLocator}`);
-          selector = savedLocator;
-        } else {
-          // Create dynamic text-based iOS locator
-          console.log(`Creating dynamic text-based iOS locator for '${identifier}'`);
-          const iOSLocator = this.createTextBasediOSLocator(identifier, elementType);
-          selector = iOSLocator;
-        }
-        
-        console.log(`Successfully created iOS selector for element '${identifier}' on attempt ${attempt}`);
-        return selector;
-        
-      } catch (error) {
-        lastError = error as Error;
-        console.warn(`Attempt ${attempt}/${retryCount} failed to create iOS selector for element '${identifier}': ${error}`);
-        
-        if (attempt < retryCount) {
-          await browser.pause(1000); // Wait 1 second before retry
-        }
-      }
-    }
-    
-    throw new Error(`Failed to create iOS selector for element '${identifier}' after ${retryCount} attempts. Last error: ${lastError?.message}`);
   }
 
   /**
@@ -333,8 +222,8 @@ class LocatorManager {
    * @param timeout - Maximum time to wait
    */
   async waitForElementState(
-    element: ChainablePromiseElement, 
-    state: 'visible' | 'clickable' | 'enabled', 
+    element: ChainablePromiseElement,
+    state: 'visible' | 'clickable' | 'enabled',
     timeout?: number
   ): Promise<void> {
     try {

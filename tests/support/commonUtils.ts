@@ -129,6 +129,81 @@ class CommonUIUtils {
         }
     }
 
+    // ===============================
+    // APPLICATION TYPE DETECTION
+    // ===============================
+
+    /**
+     * Dynamically determine the application type based on browser capabilities and context
+     * @returns Application type: 'web', 'android', 'ios', or 'hybrid'
+     */
+    async getApplicationType(): Promise<'web' | 'android' | 'ios' | 'hybrid'> {
+        try {
+            const capabilities = browser.capabilities;
+            
+            // Check for mobile platform indicators
+            const platformName = capabilities.platformName?.toLowerCase();
+            const browserName = capabilities.browserName?.toLowerCase();
+            const appPackage = (capabilities as any)['appium:appPackage'] || (capabilities as any).appPackage;
+            const bundleId = (capabilities as any)['appium:bundleId'] || (capabilities as any).bundleId;
+            
+            // Android native app detection
+            if (platformName === 'android' && appPackage) {
+                return 'android';
+            }
+            
+            // iOS native app detection
+            if (platformName === 'ios' && bundleId) {
+                return 'ios';
+            }
+            
+            // Hybrid app detection (has both native capabilities and browser context)
+            if ((platformName === 'android' || platformName === 'ios') && 
+                (browserName === 'chrome' || browserName === 'safari')) {
+                try {
+                    const contexts = await browser.getContexts();
+                    if (contexts && contexts.length > 1) {
+                        return 'hybrid';
+                    }
+                } catch (contextError) {
+                    // Context switching not available, likely native
+                    return platformName === 'android' ? 'android' : 'ios';
+                }
+            }
+            
+            // Web application detection (default fallback)
+            return 'web';
+        } catch (error) {
+            console.warn('Failed to detect application type, defaulting to web:', error);
+            return 'web';
+        }
+    }
+
+    /**
+     * Check if the current application is a web application
+     * @returns True if web application
+     */
+    async isWebApplication(): Promise<boolean> {
+        return (await this.getApplicationType()) === 'web';
+    }
+
+    /**
+     * Check if the current application is a native application (Android or iOS)
+     * @returns True if native application
+     */
+    async isNativeApplication(): Promise<boolean> {
+        const appType = await this.getApplicationType();
+        return appType === 'android' || appType === 'ios';
+    }
+
+    /**
+     * Check if the current application is a hybrid application
+     * @returns True if hybrid application
+     */
+    async isHybridApplication(): Promise<boolean> {
+        return (await this.getApplicationType()) === 'hybrid';
+    }
+
     /**
      * Get current browser capabilities
      * @returns Browser capabilities object

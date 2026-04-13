@@ -1,6 +1,9 @@
 import type { Options } from '@wdio/types';
 import { sharedConfig, mergeConfigs } from './wdio.shared.conf';
 
+// Global variable to identify application type for locator management
+(global as any).appType = 'native';
+
 // Mobile Native Application Configuration for WebDriverIO
 // Supports both local and actual device testing
 export const config: WebdriverIO.Config = mergeConfigs(sharedConfig, {

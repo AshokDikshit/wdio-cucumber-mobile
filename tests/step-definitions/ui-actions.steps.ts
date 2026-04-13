@@ -10,17 +10,17 @@ import uiActions from '../support/uiActions';
 // ===============================
 // CLICK ACTIONS
 // ===============================
-When(/^I click on "([^"]*)" (button|link|element)$/, async (elementName: string, elementType: string) => {
+When(/^I click on "([^"]*)" (button|link|element|radio button)$/, async (elementName: string, elementType: string) => {
     console.log(`Clicking on ${elementName} ${elementType}`);
     await uiActions.clickOn(elementName, elementType);
 });
 
-When(/^I double click on "([^"]*)" (button|link|element)$/, async (elementName: string, elementType: string) => {
+When(/^I double click on "([^"]*)" (button|link|element|radio button)$/, async (elementName: string, elementType: string) => {
     console.log(`Double clicking on ${elementName} ${elementType}`);
     await uiActions.doubleClickOn(elementName, elementType);
 });
 
-When(/^I right click on "([^"]*)" (button|link|element)$/, async (elementName: string, elementType: string) => {
+When(/^I right click on "([^"]*)" (button|link|element|radio button)$/, async (elementName: string, elementType: string) => {
     console.log(`Right clicking on ${elementName} ${elementType}`);
     await uiActions.rightClickOn(elementName, elementType);
 });
@@ -41,7 +41,7 @@ When(/^I select "([^"]*)" option from "([^"]*)" dropdown$/, async (option: strin
 // ===============================
 // HOVER AND FOCUS ACTIONS
 // ===============================
-When(/^I hover over "([^"]*)" (button|link|element)$/, async (elementName: string, elementType: string) => {
+When(/^I hover over "([^"]*)" (button|link|element|radio button)$/, async (elementName: string, elementType: string) => {
     console.log(`Hovering over ${elementName} ${elementType}`);
     await uiActions.hoverOn(elementName, elementType);
 });
@@ -217,23 +217,23 @@ When(/^I close current tab$/, async () => {
 // ===============================
 // WAIT ACTIONS
 // ===============================
-When(/^I wait for "([^"]*)" (button|link|element) to be visible$/, async (elementName: string, elementType: string) => {
+When(/^I wait for "([^"]*)" (button|link|element|radio button) to be visible$/, async (elementName: string, elementType: string) => {
     console.log(`Waiting for ${elementName} ${elementType}  to be visible`);
     await uiActions.waitSeconds(5); // Short wait to ensure any animations have started
     await uiActions.waitForVisible(elementName, elementType);
 });
 
-When(/^I wait for "([^"]*)" (button|link|element) to disappear$/, async (elementName: string, elementType: string) => {
+When(/^I wait for "([^"]*)" (button|link|element|radio button) to disappear$/, async (elementName: string, elementType: string) => {
     console.log(`Waiting for ${elementName} ${elementType} to disappear`);
     await uiActions.waitForDisappear(elementName, elementType);
 });
 
-When(/^I wait for "([^"]*)" (button|link|element) to be enabled$/, async (elementName: string, elementType: string) => {
+When(/^I wait for "([^"]*)" (button|link|element|radio button) to be enabled$/, async (elementName: string, elementType: string) => {
     console.log(`Waiting for ${elementName} ${elementType} to be enabled`);
     await uiActions.waitForEnabled(elementName, elementType);
 });
 
-When(/^I wait for "([^"]*)" (button|link|element) to be clickable$/, async (elementName: string, elementType: string) => {
+When(/^I wait for "([^"]*)" (button|link|element|radio button) to be clickable$/, async (elementName: string, elementType: string) => {
     console.log(`Waiting for ${elementName} ${elementType} to be clickable`);
     await uiActions.waitForClickable(elementName, elementType  );
 });

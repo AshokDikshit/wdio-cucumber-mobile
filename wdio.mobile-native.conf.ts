@@ -9,7 +9,7 @@ import { sharedConfig, mergeConfigs } from './wdio.shared.conf';
 export const config: WebdriverIO.Config = mergeConfigs(sharedConfig, {
     // Specs patterns
     specs: [
-        './tests/features/**/general-store.feature'
+        './tests/features/**/general-store-smoke-tests.feature'
     ],
 
     // Exclude patterns

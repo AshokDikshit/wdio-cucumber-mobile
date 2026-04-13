@@ -61,13 +61,13 @@ Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label|
     await uiAssertions.verifyElementNotSelected(element, elementType);
 });
 
-Then(/^"([^"]*)" checkbox should be checked$/, async (element: string) => {
-    console.log(`Verifying ${element} checkbox should be checked`);
+Then(/^"([^"]*)" (checkbox|element) should be checked$/, async (element: string, elementType: string) => {
+    console.log(`Verifying ${element} ${elementType} should be checked`);
     await uiAssertions.verifyCheckboxChecked(element);
 });
 
-Then(/^"([^"]*)" checkbox should be unchecked$/, async (element: string) => {
-    console.log(`Verifying ${element} checkbox should be unchecked`);
+Then(/^"([^"]*)" (checkbox|element) should be unchecked$/, async (element: string, elementType: string) => {
+    console.log(`Verifying ${element} ${elementType} should be unchecked`);
     await uiAssertions.verifyCheckboxUnchecked(element);
 });
 

@@ -40,7 +40,7 @@ class LocatorManager {
   private appType = (global as any).appType || 'web'; // Default to 'web' if not set
 
   constructor() {
-    this.locatorFilePath = path.join(process.cwd(), 'tests', 'locators', this.appType, 'locator.yaml');
+    this.locatorFilePath = path.join(process.cwd(), 'tests', 'locators', this.appType);
     this.locatorConfig = this.loadLocatorConfig();
   }
 
@@ -49,18 +49,53 @@ class LocatorManager {
   // ===============================
 
   /**
-   * Load locator configuration from YAML file
-   * @returns Parsed locator configuration
+   * Load locator configuration from all YAML files in the folder
+   * @returns Merged locator configuration from all YAML files
    */
   private loadLocatorConfig(): LocatorConfig {
     try {
+      const mergedConfig: LocatorConfig = { common: {} };
+      
+      // Check if the locator directory exists
       if (!fs.existsSync(this.locatorFilePath)) {
+        console.warn(`Locator directory does not exist: ${this.locatorFilePath}. Creating default structure.`);
         this.createDefaultLocatorFile();
+        return mergedConfig;
       }
 
-      const fileContent = fs.readFileSync(this.locatorFilePath, 'utf8');
-      const config = yaml.load(fileContent) as LocatorConfig;
-      return config || { common: {} };
+      // Read all YAML files from the directory
+      const files = fs.readdirSync(this.locatorFilePath)
+        .filter(file => file.endsWith('.yaml') || file.endsWith('.yml'));
+      
+      if (files.length === 0) {
+        console.warn(`No YAML files found in directory: ${this.locatorFilePath}. Creating default file.`);
+        this.createDefaultLocatorFile();
+        return mergedConfig;
+      }
+
+      // Process each YAML file
+      files.forEach(file => {
+        try {
+          const filePath = path.join(this.locatorFilePath, file);
+          const fileContent = fs.readFileSync(filePath, 'utf8');
+          const config = yaml.load(fileContent) as LocatorConfig;
+          
+          if (config) {
+            // Merge configurations
+            Object.keys(config).forEach(category => {
+              if (!mergedConfig[category]) {
+                mergedConfig[category] = {};
+              }
+              Object.assign(mergedConfig[category], config[category]);
+            });
+            console.log(`Loaded locators from: ${file}`);
+          }
+        } catch (fileError) {
+          console.warn(`Failed to load locator file ${file}: ${fileError}`);
+        }
+      });
+
+      return mergedConfig;
     } catch (error) {
       console.warn(`Failed to load locator config: ${error}. Using default configuration.`);
       return { common: {} };
@@ -68,7 +103,7 @@ class LocatorManager {
   }
 
   /**
-   * Save locator configuration to YAML file
+   * Save locator configuration to the main YAML file
    */
   private saveLocatorConfig(): void {
     try {
@@ -79,13 +114,14 @@ class LocatorManager {
       });
 
       // Ensure directory exists
-      const dir = path.dirname(this.locatorFilePath);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
+      if (!fs.existsSync(this.locatorFilePath)) {
+        fs.mkdirSync(this.locatorFilePath, { recursive: true });
       }
 
-      fs.writeFileSync(this.locatorFilePath, yamlContent, 'utf8');
-      console.log(`Locator configuration saved to: ${this.locatorFilePath}`);
+      // Save to locator.yaml file in the directory
+      const mainLocatorFile = path.join(this.locatorFilePath, 'locator.yaml');
+      fs.writeFileSync(mainLocatorFile, yamlContent, 'utf8');
+      console.log(`Locator configuration saved to: ${mainLocatorFile}`);
     } catch (error) {
       throw new Error(`Failed to save locator config: ${error}`);
     }
@@ -133,7 +169,7 @@ class LocatorManager {
    * @param category - Category of the locator (default: 'common')
    * @returns Locator value or null if not found
    */
-  getLocator(locatorName: string, category: string = 'common'): string | null {
+  getSavedLocator(locatorName: string, category: string = 'common'): string | null {
     try {
       return this.locatorConfig[category]?.[locatorName] || null;
     } catch (error) {
@@ -185,12 +221,10 @@ class LocatorManager {
         let selector: string;
 
         // First, try to get selector using saved locator
-        const savedLocator = this.getLocator(identifier, 'common');
+        const savedLocator = this.getSavedLocator(identifier, 'common');
         if (savedLocator) {
-          console.log(`Using saved locator for '${identifier}': ${savedLocator}`);
           selector = savedLocator;
           console.log(`Got saved locator '${selector}' on attempt ${attempt}`);
-          // element = await $(savedLocator);
         } else {
           // Create dynamic text-based locator
           console.log(`Creating dynamic text-based locator for '${identifier}'`);
@@ -198,14 +232,12 @@ class LocatorManager {
           // Use XPath selector for text-based locators
           selector = textLocator;
           console.log(`Got text-based locator '${selector}' on attempt ${attempt}`);
-          // element = await $(textLocator);
         }
         return selector;
 
       } catch (error) {
         lastError = error as Error;
         console.warn(`Attempt ${attempt}/${retryCount} failed to locate element '${identifier}': ${error}`);
-
         if (attempt < retryCount) {
           await browser.pause(1000); // Wait 1 second before retry
         }

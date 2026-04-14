@@ -6,3 +6,5 @@ resolution
 test-results/
 reports/
 cucumber-html-report
+local.log
+logs/

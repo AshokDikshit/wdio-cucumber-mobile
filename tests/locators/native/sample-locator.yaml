@@ -2,6 +2,7 @@ common:
   # Non-text-based locators for General Store app
   # Only elements that cannot be identified by text, placeholder, or associated label
   "Let's Shop": "//android.widget.Button[@resource-id='com.androidsample.generalstore:id/btnLetsShop']"
+  "productList": "//android.widget.FrameLayout[@resource-id='android:id/content']/android.view.ViewGroup"
 android:
   # Android specific locators if needed
   

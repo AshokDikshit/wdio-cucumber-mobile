@@ -1,0 +1,53 @@
+Story Title
+
+Manage Banking Statements Screen
+
+⸻
+
+Story (User Story Format)
+
+As a bank customer,
+I want to view and manage my account statements in one place,
+so that I can track my transactions, download records, and maintain financial visibility.
+
+⸻
+
+Description
+
+The “Manage Statements” screen will allow users to view, filter, download, and share their bank account statements. Users should be able to select a date range, choose statement formats, and perform actions such as download or email statements.
+
+⸻
+
+Acceptance Criteria
+
+1. View Statements
+	•	Given the user navigates to the Manage Statements screen
+	•	When the screen loads
+	•	Then the user should see a list of available statements by month/year
+
+2. Filter Statements by Date
+	•	Given the user is on the Manage Statements screen
+	•	When the user selects a start and end date
+	•	Then only statements within the selected range should be displayed
+
+3. Download Statement
+	•	Given the user selects a statement
+	•	When the user clicks the “Download” button
+	•	Then the statement should be downloaded in the selected format (PDF/CSV)
+
+4. Email Statement
+	•	Given the user selects a statement
+	•	When the user clicks “Send via Email”
+	•	Then the statement should be sent to the registered email address
+
+5. No Data Scenario
+	•	Given no statements are available for the selected period
+	•	Then the user should see a “No statements available” message
+
+⸻
+
+Business Rules
+	•	Users can only access statements for accounts they own
+	•	Statement history is limited to the last 7 years
+	•	Default view shows the last 3 months of statements
+	•	Supported formats: PDF and CSV

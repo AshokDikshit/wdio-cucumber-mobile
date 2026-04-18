@@ -1,0 +1,26 @@
+common:
+  # Complex locators for Mobile Banking Statements screen
+  # Only elements that cannot be identified by text, placeholder, or associated label
+  "Statement Item": "//android.widget.LinearLayout[@resource-id='com.bankingapp:id/statementItem']"
+  "Statement List": "//android.widget.RecyclerView[@resource-id='com.bankingapp:id/statementsList']"
+  "Filtered Statement List": "//android.widget.RecyclerView[@resource-id='com.bankingapp:id/filteredStatementsList']"
+  "Date Range Applied": "//android.widget.TextView[@resource-id='com.bankingapp:id/dateRangeDisplay']"
+  "Download Success": "//android.widget.TextView[@resource-id='com.bankingapp:id/downloadSuccessMessage']"
+  "Email Success": "//android.widget.TextView[@resource-id='com.bankingapp:id/emailSuccessMessage']"
+  "Email Confirmation": "//android.widget.LinearLayout[@resource-id='com.bankingapp:id/emailConfirmationDialog']"
+  "No Data Message": "//android.widget.TextView[@resource-id='com.bankingapp:id/noDataMessage']"
+  "User Account Info": "//android.widget.TextView[@resource-id='com.bankingapp:id/userAccountInfo']"
+  "Date Picker": "//android.widget.DatePicker[@resource-id='com.bankingapp:id/datePicker']"
+  "Earliest Date": "//android.widget.TextView[@resource-id='com.bankingapp:id/earliestDateInfo']"
+  "Default Period": "//android.widget.TextView[@resource-id='com.bankingapp:id/defaultPeriodInfo']"
+  "first Statement Item": "(//android.widget.LinearLayout[@resource-id='com.bankingapp:id/statementItem'])[1]"
+
+android:
+  # Android specific locators if needed
+  "Statement Item": "//android.widget.LinearLayout[@resource-id='com.bankingapp:id/statementItem']"
+  "Statement List": "//android.widget.RecyclerView[@resource-id='com.bankingapp:id/statementsList']"
+  
+ios:
+  # iOS specific locators if needed
+  "Statement Item": "//XCUIElementTypeCell[@name='statementItem']"
+  "Statement List": "//XCUIElementTypeTable[@name='statementsList']"

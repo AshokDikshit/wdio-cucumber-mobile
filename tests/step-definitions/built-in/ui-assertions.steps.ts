@@ -1,5 +1,5 @@
 import { Then, defineParameterType } from '@wdio/cucumber-framework';
-import uiAssertions from '../support/uiAssertions';
+import uiAssertions from '../../support/uiAssertions';
 
 // ===============================
 // CUSTOM PARAMETER TYPES

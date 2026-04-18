@@ -1,5 +1,6 @@
 import type { Options } from '@wdio/types';
 import { sharedConfig, mergeConfigs } from './wdio.shared.conf';
+import * as fs from 'fs';
 
 // Global variable to identify application type for locator management
 (global as any).appType = 'native';
@@ -25,31 +26,32 @@ export const config: WebdriverIO.Config = mergeConfigs(sharedConfig, {
                 buildIdentifier: '1.0.1',
                 browserstackLocal: true,
                 opts: { forcelocal: false, localIdentifier: "webdriverio-appium-app-browserstack-repo" },
-                app: process.env.BROWSERSTACK_APP_PATH || 'bs://a74c90f419175b631a82dfc62a1de0950189849e',
+                app: process.env.BROWSERSTACK_APP_PATH || 'bs://1c6d6ca971416eb8ec16c3ea70bc672bd07c12d2',
                 testObservability: true,
                 testObservabilityOptions: {
                     buildTag: ['bstack_sample'],
-                }
+                },
+                // Disable Percy if not needed or configure properly
+                percy: process.env.PERCY_TOKEN ? {
+                    token: process.env.PERCY_TOKEN
+                } : false
             }
         ]
     ],
 
     capabilities: [{
         'bstack:options': {
-            platformName: 'Android',
-            deviceName: 'Google Pixel 8',
-            osVersion: "14.0"
-        }
-    },
-{
-        'bstack:options': {
             projectName: "BrowserStack Samples",
-            buildName: 'browserstack build',
+            buildName: 'General Store Smoke Tests - Android',
             sessionName: 'BStack parallel webdriverio-appium',
             debug: true,
-            networkLogs: true,
-            source: 'webdriverio:appium-sample-sdk:v1.0'
-        }
+            networkLogs: true
+        },
+        platformName: 'Android',
+        'appium:deviceName': 'Samsung Galaxy S22',
+        'appium:platformVersion': '12.0',
+        'appium:automationName': 'UiAutomator2',
+        'appium:app': process.env.BROWSERSTACK_APP_PATH || 'bs://1c6d6ca971416eb8ec16c3ea70bc672bd07c12d2'
     }],
 
     maxInstances: 10,
@@ -67,7 +69,6 @@ export const config: WebdriverIO.Config = mergeConfigs(sharedConfig, {
         console.log('📱 Capabilities:', JSON.stringify(capabilities, null, 2));
 
         // Validate app paths exist
-        const fs = require('fs');
         if (Array.isArray(capabilities)) {
             capabilities.forEach((cap: any) => {
                 if (cap['appium:app'] && !cap['appium:app'].startsWith('http')) {

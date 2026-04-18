@@ -1,7 +1,7 @@
 import { Given, When, Then } from '@wdio/cucumber-framework';
 import { expect } from '@wdio/globals';
-import uiActions from '../support/uiActions';
-import uiAssertions from '../support/uiAssertions';
+import uiActions from '../../support/uiActions';
+import uiAssertions from '../../support/uiAssertions';
 
 // ===============================
 // REGISTRATION SPECIFIC STEP DEFINITIONS

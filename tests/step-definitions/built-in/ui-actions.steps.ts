@@ -1,6 +1,6 @@
 import { Given, When, Then } from '@wdio/cucumber-framework';
 import { $ } from '@wdio/globals';
-import uiActions from '../support/uiActions';
+import uiActions from '../../support/uiActions';
 // ===============================
 // GLOBAL ACTIONS STEP DEFINITIONS
 // ===============================

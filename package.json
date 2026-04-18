@@ -16,7 +16,7 @@
     "test:mobile-native:android-device": "wdio run ./wdio.mobile-native.conf.ts --spec ./tests/features/**/*.feature --capabilities 1",
     "test:mobile-native:ios-simulator": "wdio run ./wdio.mobile-native.conf.ts --spec ./tests/features/**/*.feature --capabilities 2",
     "test:mobile-native:ios-device": "wdio run ./wdio.mobile-native.conf.ts --spec ./tests/features/**/*.feature --capabilities 3",
-    "report": "node generate-cucumber-report.js"
+    "report": "node ./tests/support/generate-cucumber-report.js"
   },
   "keywords": [],
   "author": "",

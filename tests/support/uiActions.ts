@@ -4,22 +4,22 @@ import commonUtils from './commonUtils';
 
 // Type definitions for mobile-specific browser capabilities
 interface MobileBrowser {
-  isMobile?: boolean;
-  setOrientation?: (orientation: 'LANDSCAPE' | 'PORTRAIT') => Promise<void>;
-  shake?: () => Promise<void>;
-  lock?: (seconds?: number) => Promise<void>;
-  unlock?: () => Promise<void>;
-  background?: (duration: number) => Promise<void>;
-  hideKeyboard?: (strategy?: string, key?: string) => Promise<void>;
-  touchAction?: (actions: TouchAction | TouchAction[]) => Promise<void>;
+    isMobile?: boolean;
+    setOrientation?: (orientation: 'LANDSCAPE' | 'PORTRAIT') => Promise<void>;
+    shake?: () => Promise<void>;
+    lock?: (seconds?: number) => Promise<void>;
+    unlock?: () => Promise<void>;
+    background?: (duration: number) => Promise<void>;
+    hideKeyboard?: (strategy?: string, key?: string) => Promise<void>;
+    touchAction?: (actions: TouchAction | TouchAction[]) => Promise<void>;
 }
 
 interface TouchAction {
-  action: 'press' | 'longPress' | 'tap' | 'moveTo' | 'wait' | 'release';
-  element?: ChainablePromiseElement;
-  x?: number;
-  y?: number;
-  ms?: number;
+    action: 'press' | 'longPress' | 'tap' | 'moveTo' | 'wait' | 'release';
+    element?: ChainablePromiseElement;
+    x?: number;
+    y?: number;
+    ms?: number;
 }
 
 /**
@@ -32,11 +32,11 @@ interface TouchAction {
  * @version 1.0.0
  */
 class UIActions {
-    
+
     // ===============================
     // ELEMENT LOCATOR HELPERS (Using Common Utils)
     // ===============================
-    
+
     /**
      * Get element locator based on element name and type
      * @param elementName - Name of the element
@@ -53,13 +53,18 @@ class UIActions {
      * @param state - State to wait for (visible, clickable, enabled)
      */
     private async waitForElementState(element: ChainablePromiseElement, state: 'visible' | 'clickable' | 'enabled'): Promise<void> {
-        return await commonUtils.waitForElementState(element, state);
+        const appType = await commonUtils.getApplicationType(); // Dynamically determined based on test context
+        if(await commonUtils.isWebApplication()) {
+            await commonUtils.waitForElementState(element, state);
+        } else {
+            //For native waitForElementState is not applicable
+        }
     }
 
     // ===============================
     // CLICK ACTIONS
     // ===============================
-    
+
     /**
      * Click on an element
      * @param elementName - Name of the element to click
@@ -111,7 +116,7 @@ class UIActions {
     // ===============================
     // DROPDOWN AND SELECTION ACTIONS
     // ===============================
-    
+
     /**
      * Select option from dropdown
      * @param elementName - Name of the dropdown element
@@ -140,7 +145,7 @@ class UIActions {
     // ===============================
     // HOVER AND FOCUS ACTIONS
     // ===============================
-    
+
     /**
      * Hover over an element
      * @param elementName - Name of the element to hover over
@@ -176,7 +181,7 @@ class UIActions {
     // ===============================
     // SCROLL ACTIONS
     // ===============================
-    
+
     /**
      * Scroll to an element
      * @param elementName - Name of the element to scroll to
@@ -243,7 +248,7 @@ class UIActions {
     async scrollDirectionToAndClick(direction: string, targetElement: string, clickElement: string): Promise<void> {
         try {
             const target = await this.getElement(targetElement, 'element');
-            
+
             // Scroll in the specified direction
             switch (direction.toLowerCase()) {
                 case 'left':
@@ -259,7 +264,7 @@ class UIActions {
                     await (browser as any).execute('arguments[0].scrollTop += 200', target);
                     break;
             }
-            
+
             await this.clickOn(clickElement, 'element');
             console.log(`Successfully scrolled ${direction} to ${targetElement} and clicked ${clickElement}`);
         } catch (error) {
@@ -275,7 +280,7 @@ class UIActions {
     async scrollByPixels(direction: string, pixels: string): Promise<void> {
         try {
             const pixelValue = parseInt(pixels);
-            
+
             switch (direction.toLowerCase()) {
                 case 'left':
                     await (browser as any).execute(`window.scrollBy(-${pixelValue}, 0)`);
@@ -290,7 +295,7 @@ class UIActions {
                     await (browser as any).execute(`window.scrollBy(0, ${pixelValue})`);
                     break;
             }
-            
+
             console.log(`Successfully scrolled ${direction} by ${pixels} pixels`);
         } catch (error) {
             throw new Error(`Failed to scroll ${direction} by ${pixels} pixels: ${error}`);
@@ -300,7 +305,7 @@ class UIActions {
     // ===============================
     // TOUCH AND GESTURE ACTIONS (Mobile)
     // ===============================
-    
+
     /**
      * Press and hold an element
      * @param elementName - Name of the element
@@ -310,7 +315,7 @@ class UIActions {
         try {
             const element = await this.getElement(elementName, elementType);
             await this.waitForElementState(element, 'visible');
-            
+
             // For mobile, use touchAction
             if ((browser as MobileBrowser).isMobile) {
                 await (browser as MobileBrowser).touchAction!({
@@ -329,7 +334,7 @@ class UIActions {
                     ]
                 }]);
             }
-            
+
             console.log(`Successfully pressed and held ${elementName} ${elementType}`);
         } catch (error) {
             throw new Error(`Failed to press and hold ${elementName} ${elementType}: ${error}`);
@@ -353,7 +358,7 @@ class UIActions {
                     ]
                 }]);
             }
-            
+
             console.log(`Successfully released hold on ${elementName} ${elementType}`);
         } catch (error) {
             throw new Error(`Failed to release hold on ${elementName} ${elementType}: ${error}`);
@@ -369,7 +374,7 @@ class UIActions {
         try {
             const element = await this.getElement(elementName, elementType);
             await this.waitForElementState(element, 'visible');
-            
+
             if ((browser as MobileBrowser).isMobile) {
                 await (browser as MobileBrowser).touchAction!([
                     { action: 'longPress', element: element }
@@ -381,7 +386,7 @@ class UIActions {
                 await browser.pause(2000);
                 await this.releaseHold(elementName, elementType);
             }
-            
+
             console.log(`Successfully long pressed ${elementName} ${elementType}`);
         } catch (error) {
             throw new Error(`Failed to long press ${elementName} ${elementType}: ${error}`);
@@ -397,10 +402,10 @@ class UIActions {
         try {
             const fromEl = await this.getElement(fromElement, 'element');
             const toEl = await this.getElement(toElement, 'element');
-            
+
             const fromLocation = await fromEl.getLocation();
             const toLocation = await toEl.getLocation();
-            
+
             if ((browser as MobileBrowser).isMobile) {
                 await (browser as MobileBrowser).touchAction!([
                     { action: 'press', x: fromLocation.x, y: fromLocation.y },
@@ -420,7 +425,7 @@ class UIActions {
                     ]
                 }]);
             }
-            
+
             console.log(`Successfully swiped from ${fromElement} to ${toElement}`);
         } catch (error) {
             throw new Error(`Failed to swipe from ${fromElement} to ${toElement}: ${error}`);
@@ -437,14 +442,14 @@ class UIActions {
             const element = await this.getElement(elementName, 'element');
             const location = await element.getLocation();
             const size = await element.getSize();
-            
+
             let startX = location.x + size.width / 2;
             let startY = location.y + size.height / 2;
             let endX = startX;
             let endY = startY;
-            
+
             const swipeDistance = 200;
-            
+
             switch (direction.toLowerCase()) {
                 case 'left':
                     endX = startX - swipeDistance;
@@ -459,7 +464,7 @@ class UIActions {
                     endY = startY + swipeDistance;
                     break;
             }
-            
+
             if ((browser as MobileBrowser).isMobile) {
                 await (browser as MobileBrowser).touchAction!([
                     { action: 'press', x: startX, y: startY },
@@ -467,7 +472,7 @@ class UIActions {
                     { action: 'release' }
                 ]);
             }
-            
+
             console.log(`Successfully swiped ${direction} on ${elementName}`);
         } catch (error) {
             throw new Error(`Failed to swipe ${direction} on ${elementName}: ${error}`);
@@ -481,14 +486,14 @@ class UIActions {
     async pinchIn(elementName: string): Promise<void> {
         try {
             const element = await this.getElement(elementName, 'element');
-            
+
             if ((browser as MobileBrowser).isMobile) {
                 const location = await element.getLocation();
                 const size = await element.getSize();
-                
+
                 const centerX = location.x + size.width / 2;
                 const centerY = location.y + size.height / 2;
-                
+
                 // Simulate pinch in gesture
                 await (browser as MobileBrowser).touchAction!([
                     { action: 'press', x: centerX - 50, y: centerY },
@@ -499,7 +504,7 @@ class UIActions {
                     { action: 'release' }
                 ]);
             }
-            
+
             console.log(`Successfully pinched in on ${elementName}`);
         } catch (error) {
             throw new Error(`Failed to pinch in on ${elementName}: ${error}`);
@@ -513,14 +518,14 @@ class UIActions {
     async pinchOut(elementName: string): Promise<void> {
         try {
             const element = await this.getElement(elementName, 'element');
-            
+
             if ((browser as MobileBrowser).isMobile) {
                 const location = await element.getLocation();
                 const size = await element.getSize();
-                
+
                 const centerX = location.x + size.width / 2;
                 const centerY = location.y + size.height / 2;
-                
+
                 // Simulate pinch out gesture
                 await (browser as MobileBrowser).touchAction!([
                     { action: 'press', x: centerX - 10, y: centerY },
@@ -531,7 +536,7 @@ class UIActions {
                     { action: 'release' }
                 ]);
             }
-            
+
             console.log(`Successfully pinched out on ${elementName}`);
         } catch (error) {
             throw new Error(`Failed to pinch out on ${elementName}: ${error}`);
@@ -567,7 +572,7 @@ class UIActions {
     // ===============================
     // TEXT INPUT ACTIONS
     // ===============================
-    
+
     /**
      * Type text into an element
      * @param text - Text to type
@@ -622,7 +627,7 @@ class UIActions {
     // ===============================
     // CHECKBOX AND RADIO ACTIONS
     // ===============================
-    
+
     /**
      * Check a checkbox
      * @param elementName - Name of the checkbox
@@ -631,12 +636,12 @@ class UIActions {
         try {
             const checkbox = await this.getElement(elementName, 'checkbox');
             await this.waitForElementState(checkbox, 'clickable');
-            
+
             const isChecked = await checkbox.isSelected();
             if (!isChecked) {
                 await checkbox.click();
             }
-            
+
             console.log(`Successfully checked ${elementName} checkbox`);
         } catch (error) {
             throw new Error(`Failed to check ${elementName} checkbox: ${error}`);
@@ -651,12 +656,12 @@ class UIActions {
         try {
             const checkbox = await this.getElement(elementName, 'checkbox');
             await this.waitForElementState(checkbox, 'clickable');
-            
+
             const isChecked = await checkbox.isSelected();
             if (isChecked) {
                 await checkbox.click();
             }
-            
+
             console.log(`Successfully unchecked ${elementName} checkbox`);
         } catch (error) {
             throw new Error(`Failed to uncheck ${elementName} checkbox: ${error}`);
@@ -681,7 +686,7 @@ class UIActions {
     // ===============================
     // NAVIGATION ACTIONS
     // ===============================
-    
+
     /**
      * Navigate to a URL
      * @param url - URL to navigate to
@@ -751,7 +756,7 @@ class UIActions {
         try {
             const handles = await browser.getWindowHandles();
             const index = parseInt(tabIndex);
-            
+
             if (index >= 0 && index < handles.length) {
                 await browser.switchToWindow(handles[index]);
                 console.log(`Successfully switched to tab ${tabIndex}`);
@@ -790,18 +795,18 @@ class UIActions {
     // ===============================
     // WAIT ACTIONS
     // ===============================
-    
+
     /**
      * Wait for element to be visible
      * @param elementName - Name of the element
      */
-    async waitForVisible(elementName: string): Promise<void> {
+    async waitForVisible(elementName: string, elementType: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType);
             await element.waitForDisplayed({ timeout: 10000 });
-            console.log(`Successfully waited for ${elementName} to be visible`);
+            console.log(`Successfully waited for ${elementName} ${elementType} to be visible`);
         } catch (error) {
-            throw new Error(`Failed to wait for ${elementName} to be visible: ${error}`);
+            throw new Error(`Failed to wait for ${elementName} ${elementType} to be visible: ${error}`);
         }
     }
 
@@ -809,13 +814,13 @@ class UIActions {
      * Wait for element to disappear
      * @param elementName - Name of the element
      */
-    async waitForDisappear(elementName: string): Promise<void> {
+    async waitForDisappear(elementName: string, elementType: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType);
             await element.waitForDisplayed({ timeout: 10000, reverse: true });
-            console.log(`Successfully waited for ${elementName} to disappear`);
+            console.log(`Successfully waited for ${elementName} ${elementType} to disappear`);
         } catch (error) {
-            throw new Error(`Failed to wait for ${elementName} to disappear: ${error}`);
+            throw new Error(`Failed to wait for ${elementName} ${elementType} to disappear: ${error}`);
         }
     }
 
@@ -823,13 +828,13 @@ class UIActions {
      * Wait for element to be enabled
      * @param elementName - Name of the element
      */
-    async waitForEnabled(elementName: string): Promise<void> {
+    async waitForEnabled(elementName: string, elementType: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType);
             await element.waitForEnabled({ timeout: 10000 });
-            console.log(`Successfully waited for ${elementName} to be enabled`);
+            console.log(`Successfully waited for ${elementName} ${elementType} to be enabled`);
         } catch (error) {
-            throw new Error(`Failed to wait for ${elementName} to be enabled: ${error}`);
+            throw new Error(`Failed to wait for ${elementName} ${elementType} to be enabled: ${error}`);
         }
     }
 
@@ -837,11 +842,11 @@ class UIActions {
      * Wait for element to be clickable
      * @param elementName - Name of the element
      */
-    async waitForClickable(elementName: string): Promise<void> {
+    async waitForClickable(elementName: string, elementType: string): Promise<void> {
         try {
-            const element = await this.getElement(elementName, 'element');
+            const element = await this.getElement(elementName, elementType);
             await element.waitForClickable({ timeout: 10000 });
-            console.log(`Successfully waited for ${elementName} to be clickable`);
+            console.log(`Successfully waited for ${elementName} ${elementType} to be clickable`);
         } catch (error) {
             throw new Error(`Failed to wait for ${elementName} to be clickable: ${error}`);
         }
@@ -851,7 +856,7 @@ class UIActions {
      * Wait for specified number of seconds
      * @param seconds - Number of seconds to wait
      */
-    async waitSeconds(seconds: string): Promise<void> {
+    async waitSeconds(seconds: any): Promise<void> {
         try {
             const ms = parseInt(seconds) * 1000;
             await commonUtils.pause(ms);
@@ -876,7 +881,7 @@ class UIActions {
     // ===============================
     // FILE UPLOAD ACTIONS
     // ===============================
-    
+
     /**
      * Upload a file to an element
      * @param filePath - Path to the file
@@ -909,7 +914,7 @@ class UIActions {
     // ===============================
     // ALERT AND MODAL ACTIONS
     // ===============================
-    
+
     /**
      * Accept an alert
      */
@@ -996,7 +1001,7 @@ class UIActions {
     // ===============================
     // MOBILE-SPECIFIC ACTIONS
     // ===============================
-    
+
     /**
      * Rotate device orientation
      * @param orientation - Orientation to rotate to (landscape/portrait)
@@ -1111,7 +1116,7 @@ class UIActions {
     /**
      * Hide keyboard (mobile)
      */
-        async hideKeyboard(): Promise<void> {
+    async hideKeyboard(): Promise<void> {
         try {
             if ((browser as MobileBrowser).isMobile) {
                 await (browser as MobileBrowser).hideKeyboard!();
@@ -1127,7 +1132,7 @@ class UIActions {
     /**
      * Show keyboard (mobile)
      */
-        async showKeyboard(): Promise<void> {
+    async showKeyboard(): Promise<void> {
         try {
             if ((browser as MobileBrowser).isMobile) {
                 // Focus on an input field to show keyboard
@@ -1147,7 +1152,7 @@ class UIActions {
     // ===============================
     // FORM ACTIONS
     // ===============================
-    
+
     /**
      * Submit a form
      */
@@ -1195,13 +1200,13 @@ class UIActions {
     async fillFormWithData(dataTable: any): Promise<void> {
         try {
             const data = dataTable.raw();
-            
+
             for (const row of data) {
                 const [fieldName, value] = row;
                 const field = await this.getElement(fieldName, 'field');
                 await field.setValue(value);
             }
-            
+
             console.log('Successfully filled form with data table');
         } catch (error) {
             throw new Error(`Failed to fill form with data: ${error}`);
@@ -1211,12 +1216,12 @@ class UIActions {
     // ===============================
     // KEYBOARD ACTIONS
     // ===============================
-    
+
     /**
      * Press a key
      * @param key - Key to press
      */
-        async pressKey(key: string): Promise<void> {
+    async pressKey(key: string): Promise<void> {
         try {
             await browser.keys(key);
             console.log(`Successfully pressed ${key} key`);
@@ -1229,7 +1234,7 @@ class UIActions {
      * Press key combination
      * @param keys - Key combination (e.g., "Ctrl+C")
      */
-        async pressKeyCombination(keys: string): Promise<void> {
+    async pressKeyCombination(keys: string): Promise<void> {
         try {
             const keyArray = keys.split('+').map(k => k.trim());
             await browser.keys(keyArray);
@@ -1242,7 +1247,7 @@ class UIActions {
     // ===============================
     // DRAG AND DROP ACTIONS
     // ===============================
-    
+
     /**
      * Drag element to another element
      * @param sourceElement - Source element to drag
@@ -1252,7 +1257,7 @@ class UIActions {
         try {
             const source = await this.getElement(sourceElement, 'element');
             const target = await this.getElement(targetElement, 'element');
-            
+
             await source.dragAndDrop(target);
             console.log(`Successfully dragged ${sourceElement} to ${targetElement}`);
         } catch (error) {
@@ -1271,7 +1276,7 @@ class UIActions {
             const element = await this.getElement(elementName, 'element');
             const xOffset = parseInt(x);
             const yOffset = parseInt(y);
-            
+
             await element.dragAndDrop({ x: xOffset, y: yOffset });
             console.log(`Successfully dragged ${elementName} by offset (${x},${y})`);
         } catch (error) {

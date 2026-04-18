@@ -1,7 +1,7 @@
 import { Given, When, Then } from '@wdio/cucumber-framework';
 import { expect } from '@wdio/globals';
-import uiActions from '../support/uiActions';
-import uiAssertions from '../support/uiAssertions';
+import uiActions from '../../support/uiActions';
+import uiAssertions from '../../support/uiAssertions';
 
 // ===============================
 // REGISTRATION SPECIFIC STEP DEFINITIONS
@@ -139,32 +139,4 @@ Then(/^no session timeout error should be displayed$/, async () => {
     // Implementation: Check that no timeout error messages are visible
     await uiAssertions.verifyElementNotVisible('Session Timeout', 'element');
     await uiAssertions.verifyElementNotVisible('Session Expired', 'element');
-});
-
-// ===============================
-// UTILITY STEPS
-// ===============================
-When(/^I wait (\d+) seconds$/, async (seconds: string) => {
-    console.log(`Waiting ${seconds} seconds`);
-    await uiActions.waitSeconds(seconds);
-});
-
-// ===============================
-// PLACEHOLDER STEPS FOR COMPLEX SCENARIOS
-// ===============================
-// These steps might need custom implementation based on the actual application
-
-Then(/^"([^"]*)" element should be visible$/, async (elementName: string) => {
-    console.log(`Verifying ${elementName} element should be visible`);
-    await uiAssertions.verifyElementVisible(elementName, 'element');
-});
-
-Then(/^"([^"]*)" link should be visible$/, async (linkName: string) => {
-    console.log(`Verifying ${linkName} link should be visible`);
-    await uiAssertions.verifyElementVisible(linkName, 'link');
-});
-
-Then(/^"([^"]*)" heading should be visible$/, async (headingName: string) => {
-    console.log(`Verifying ${headingName} heading should be visible`);
-    await uiAssertions.verifyElementVisible(headingName, 'heading');
 });

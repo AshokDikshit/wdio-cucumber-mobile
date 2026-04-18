@@ -37,9 +37,10 @@ class LocatorManager {
   private locatorConfig: LocatorConfig;
   private defaultTimeout: number = 10000;
   private defaultRetryCount: number = 3;
+  private appType = (global as any).appType || 'web'; // Default to 'web' if not set
 
   constructor() {
-    this.locatorFilePath = path.join(process.cwd(), 'tests', 'locators', 'web', 'locator.yaml');
+    this.locatorFilePath = path.join(process.cwd(), 'tests', 'locators', this.appType);
     this.locatorConfig = this.loadLocatorConfig();
   }
 
@@ -48,18 +49,53 @@ class LocatorManager {
   // ===============================
 
   /**
-   * Load locator configuration from YAML file
-   * @returns Parsed locator configuration
+   * Load locator configuration from all YAML files in the folder
+   * @returns Merged locator configuration from all YAML files
    */
   private loadLocatorConfig(): LocatorConfig {
     try {
-      if (!fs.existsSync(this.locatorFilePath)) {
-        this.createDefaultLocatorFile();
-      }
+      const mergedConfig: LocatorConfig = { common: {} };
       
-      const fileContent = fs.readFileSync(this.locatorFilePath, 'utf8');
-      const config = yaml.load(fileContent) as LocatorConfig;
-      return config || { common: {} };
+      // Check if the locator directory exists
+      if (!fs.existsSync(this.locatorFilePath)) {
+        console.warn(`Locator directory does not exist: ${this.locatorFilePath}. Creating default structure.`);
+        this.createDefaultLocatorFile();
+        return mergedConfig;
+      }
+
+      // Read all YAML files from the directory
+      const files = fs.readdirSync(this.locatorFilePath)
+        .filter(file => file.endsWith('.yaml') || file.endsWith('.yml'));
+      
+      if (files.length === 0) {
+        console.warn(`No YAML files found in directory: ${this.locatorFilePath}. Creating default file.`);
+        this.createDefaultLocatorFile();
+        return mergedConfig;
+      }
+
+      // Process each YAML file
+      files.forEach(file => {
+        try {
+          const filePath = path.join(this.locatorFilePath, file);
+          const fileContent = fs.readFileSync(filePath, 'utf8');
+          const config = yaml.load(fileContent) as LocatorConfig;
+          
+          if (config) {
+            // Merge configurations
+            Object.keys(config).forEach(category => {
+              if (!mergedConfig[category]) {
+                mergedConfig[category] = {};
+              }
+              Object.assign(mergedConfig[category], config[category]);
+            });
+            console.log(`Loaded locators from: ${file}`);
+          }
+        } catch (fileError) {
+          console.warn(`Failed to load locator file ${file}: ${fileError}`);
+        }
+      });
+
+      return mergedConfig;
     } catch (error) {
       console.warn(`Failed to load locator config: ${error}. Using default configuration.`);
       return { common: {} };
@@ -67,7 +103,7 @@ class LocatorManager {
   }
 
   /**
-   * Save locator configuration to YAML file
+   * Save locator configuration to the main YAML file
    */
   private saveLocatorConfig(): void {
     try {
@@ -76,15 +112,16 @@ class LocatorManager {
         lineWidth: -1,
         noRefs: true
       });
-      
+
       // Ensure directory exists
-      const dir = path.dirname(this.locatorFilePath);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
+      if (!fs.existsSync(this.locatorFilePath)) {
+        fs.mkdirSync(this.locatorFilePath, { recursive: true });
       }
-      
-      fs.writeFileSync(this.locatorFilePath, yamlContent, 'utf8');
-      console.log(`Locator configuration saved to: ${this.locatorFilePath}`);
+
+      // Save to locator.yaml file in the directory
+      const mainLocatorFile = path.join(this.locatorFilePath, 'locator.yaml');
+      fs.writeFileSync(mainLocatorFile, yamlContent, 'utf8');
+      console.log(`Locator configuration saved to: ${mainLocatorFile}`);
     } catch (error) {
       throw new Error(`Failed to save locator config: ${error}`);
     }
@@ -100,7 +137,7 @@ class LocatorManager {
         locator2: '<locator2_value>'
       }
     };
-    
+
     this.locatorConfig = defaultConfig;
     this.saveLocatorConfig();
   }
@@ -116,10 +153,10 @@ class LocatorManager {
       if (!this.locatorConfig[category]) {
         this.locatorConfig[category] = {};
       }
-      
+
       this.locatorConfig[category][locatorName] = locatorValue;
       this.saveLocatorConfig();
-      
+
       console.log(`Added custom locator '${locatorName}' to category '${category}': ${locatorValue}`);
     } catch (error) {
       throw new Error(`Failed to add custom locator: ${error}`);
@@ -132,7 +169,7 @@ class LocatorManager {
    * @param category - Category of the locator (default: 'common')
    * @returns Locator value or null if not found
    */
-  getLocator(locatorName: string, category: string = 'common'): string | null {
+  getSavedLocator(locatorName: string, category: string = 'common'): string | null {
     try {
       return this.locatorConfig[category]?.[locatorName] || null;
     } catch (error) {
@@ -151,30 +188,16 @@ class LocatorManager {
    * @param elementType - Type of element (button, link, etc.)
    * @returns CSS selector string
    */
-  private createTextBasedLocator(text: string, elementType?: string): string {
-    const escapedText = text.replace(/'/g, "\\'").replace(/"/g, '\\"');
-    
-    if (elementType) {
-      switch (elementType.toLowerCase()) {
-        case 'button':
-          return `//button[contains(text(),'${escapedText}')] | //*[@role='button'][contains(text(),'${escapedText}')] | //input[@type='button' and contains(@value,'${escapedText}')] | //input[@type='submit' and contains(@value,'${escapedText}')]`;
-        case 'input':
-          return `//input[@type='text' and contains(@placeholder,'${escapedText}')] | //input[@type='secure' and contains(@placeholder,'${escapedText}')] | //input[@type='password' and contains(@placeholder,'${escapedText}')]`;
-        case 'field':
-          return `//input[@type='text' and contains(@placeholder,'${escapedText}')] | //input[@type='secure' and contains(@placeholder,'${escapedText}')] | //input[@type='password' and contains(@placeholder,'${escapedText}')]`;
-        case 'link':
-          return `//a[contains(text(),'${escapedText}')] | //*[@role='link'][contains(text(),'${escapedText}')]`;
-        case 'label':
-          return `//label[contains(text(),'${escapedText}')]`;
-        case 'heading':
-          return `//h1[contains(text(),'${escapedText}')] | //h2[contains(text(),'${escapedText}')] | //h3[contains(text(),'${escapedText}')] | //h4[contains(text(),'${escapedText}')] | //h5[contains(text(),'${escapedText}')] | //h6[contains(text(),'${escapedText}')]`;
-        default:
-          return `//*[contains(text(),'${escapedText}')]`;
-      }
+  private async createTextBasedLocator(text: string, elementType?: string): Promise<string> {
+    // const escapedText = text.replace(/'/g, "\\'').replace(/"/g, '\\"');
+    const escapedText = text;
+    if (this.appType === 'web' || this.appType === 'hybrid') {
+      // Generic text-based selector proven for web but seems or operator does not work incase of native
+      return `//*[contains(@text,'${escapedText}')] | //*[contains(text(),'${escapedText}')] | //*[contains(@placeholder,'${escapedText}')] | //*[contains(@title,'${escapedText}')] | //*[contains(@name,'${escapedText}')] | //*[contains(@content-desc,'${escapedText}')] | //*[contains(@value,'${escapedText}')] | //*[contains(@label,'${escapedText}')] | //*[contains(@description,'${escapedText}')] | //*[contains(@data-test-id,'${escapedText}')] | //*[contains(@data-test,'${escapedText}')] | //*[contains(@data-testid,'${escapedText}')]`;
+    } else {
+      //For native applications
+      return `//*[contains(@text,'${escapedText}')]`;
     }
-    
-    // Generic text-based selector with priority order using XPath
-    return `//button[contains(text(),'${escapedText}')] | //*[@role='button'][contains(text(),'${escapedText}')] | //a[contains(text(),'${escapedText}')] | //*[@role='link'][contains(text(),'${escapedText}')] | //*[contains(text(),'${escapedText}')]`;
   }
 
   /**
@@ -185,49 +208,42 @@ class LocatorManager {
    * @returns WebDriverIO element
    */
   async getSelector(
-    identifier: string, 
-    elementType?: string, 
+    identifier: string,
+    elementType?: string,
     options: ElementActionOptions = {}
   ): Promise<string> {
     const { timeout = this.defaultTimeout, waitForState = 'visible', retryCount = this.defaultRetryCount } = options;
-    
+
     let lastError: Error | null = null;
-    
+
     for (let attempt = 1; attempt <= retryCount; attempt++) {
       try {
         let selector: string;
-        
+
         // First, try to get selector using saved locator
-        const savedLocator = this.getLocator(identifier);
+        const savedLocator = this.getSavedLocator(identifier, 'common');
         if (savedLocator) {
-          console.log(`Using saved locator for '${identifier}': ${savedLocator}`);
           selector = savedLocator;
-          // element = await $(savedLocator);
+          console.log(`Got saved locator '${selector}' on attempt ${attempt}`);
         } else {
           // Create dynamic text-based locator
           console.log(`Creating dynamic text-based locator for '${identifier}'`);
-          const textLocator = this.createTextBasedLocator(identifier, elementType);
+          const textLocator = await this.createTextBasedLocator(identifier, elementType);
           // Use XPath selector for text-based locators
           selector = textLocator;
-          // element = await $(textLocator);
+          console.log(`Got text-based locator '${selector}' on attempt ${attempt}`);
         }
-        
-        // // Wait for element to be in desired state
-        // await this.waitForElementState(element, waitForState, timeout);
-        
-        console.log(`Successfully located element '${identifier}' on attempt ${attempt}`);
         return selector;
-        
+
       } catch (error) {
         lastError = error as Error;
         console.warn(`Attempt ${attempt}/${retryCount} failed to locate element '${identifier}': ${error}`);
-        
         if (attempt < retryCount) {
           await browser.pause(1000); // Wait 1 second before retry
         }
       }
     }
-    
+
     throw new Error(`Failed to locate element '${identifier}' after ${retryCount} attempts. Last error: ${lastError?.message}`);
   }
 
@@ -238,8 +254,8 @@ class LocatorManager {
    * @param timeout - Maximum time to wait
    */
   async waitForElementState(
-    element: ChainablePromiseElement, 
-    state: 'visible' | 'clickable' | 'enabled', 
+    element: ChainablePromiseElement,
+    state: 'visible' | 'clickable' | 'enabled',
     timeout?: number
   ): Promise<void> {
     try {
@@ -312,3 +328,12 @@ class LocatorManager {
 const locatorManager = new LocatorManager();
 export default locatorManager;
 export { LocatorManager, LocatorConfig, ElementActionOptions };
+
+// Export the new Android and iOS locator functions for external use
+export const createTextBasedAndroidLocator = (text: string, elementType?: string): string => {
+  return (locatorManager as any).createTextBasedAndroidLocator(text, elementType);
+};
+
+export const createTextBasediOSLocator = (text: string, elementType?: string): string => {
+  return (locatorManager as any).createTextBasediOSLocator(text, elementType);
+};

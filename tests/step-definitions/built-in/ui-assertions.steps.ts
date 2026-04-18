@@ -1,5 +1,5 @@
 import { Then, defineParameterType } from '@wdio/cucumber-framework';
-import uiAssertions from '../support/uiAssertions';
+import uiAssertions from '../../support/uiAssertions';
 
 // ===============================
 // CUSTOM PARAMETER TYPES
@@ -20,54 +20,54 @@ defineParameterType({
 // This file contains only assertion steps (Then) that verify conditions
 // For actions and operations, see global-actions.steps.ts
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be visible$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label|radio button) should be visible$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be visible`);
     await uiAssertions.verifyElementVisible(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should not be visible$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label|radio button) should not be visible$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should not be visible`);
     await uiAssertions.verifyElementNotVisible(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be displayed$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label|radio button) should be displayed$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be displayed`);
     await uiAssertions.verifyElementDisplayed(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be hidden$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label|radio button) should be hidden$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be hidden`);
     await uiAssertions.verifyElementHidden(element, elementType);
 });
 
 // Element State Assertions
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be enabled$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label|radio button) should be enabled$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be enabled`);
     await uiAssertions.verifyElementEnabled(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be disabled$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label|radio button) should be disabled$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be disabled`);
     await uiAssertions.verifyElementDisabled(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should be selected$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label|radio button) should be selected$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should be selected`);
     await uiAssertions.verifyElementSelected(element, elementType);
 });
 
-Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label) should not be selected$/, async (element: string, elementType: string) => {
+Then(/^"([^"]*)" (button|link|element|field|input|textbox|section|heading|label|radio button) should not be selected$/, async (element: string, elementType: string) => {
     console.log(`Verifying ${element} ${elementType} should not be selected`);
     await uiAssertions.verifyElementNotSelected(element, elementType);
 });
 
-Then(/^"([^"]*)" checkbox should be checked$/, async (element: string) => {
-    console.log(`Verifying ${element} checkbox should be checked`);
+Then(/^"([^"]*)" (checkbox|element) should be checked$/, async (element: string, elementType: string) => {
+    console.log(`Verifying ${element} ${elementType} should be checked`);
     await uiAssertions.verifyCheckboxChecked(element);
 });
 
-Then(/^"([^"]*)" checkbox should be unchecked$/, async (element: string) => {
-    console.log(`Verifying ${element} checkbox should be unchecked`);
+Then(/^"([^"]*)" (checkbox|element) should be unchecked$/, async (element: string, elementType: string) => {
+    console.log(`Verifying ${element} ${elementType} should be unchecked`);
     await uiAssertions.verifyCheckboxUnchecked(element);
 });
 

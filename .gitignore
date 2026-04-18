@@ -4,4 +4,7 @@ package-lock.json
 .vscode
 resolution
 test-results/
+reports/
 cucumber-html-report
+local.log
+logs/

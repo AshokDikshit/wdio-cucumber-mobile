@@ -1,6 +1,0 @@
-common:
-  locator1: "<locator1_value>"
-ios:
-  locator2: "<locator2_value>"
-android:
-  locator3: "<locator3_value>"

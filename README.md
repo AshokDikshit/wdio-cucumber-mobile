@@ -31,7 +31,7 @@ This automation framework is designed with the following principles:
 ## 📁 Project Structure
 
 ```
-wdio-cucumber-mobile/
+wdio-bdd-mobile-test/
 ├── app/                             # Mobile applications for testing
 │   ├── android/
 │   │   └── General-Store.apk        # Android test application
@@ -95,7 +95,7 @@ wdio-cucumber-mobile/
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd wdio-cucumber-mobile
+cd wdio-bdd-mobile-test
 ```
 
 2. Install dependencies:
